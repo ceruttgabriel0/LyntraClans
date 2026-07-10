@@ -111,7 +111,7 @@ public final class LyntraClans extends JavaPlugin implements Listener {
         InactivityManager inactivityManager = new InactivityManager(getLogger(), configManager, clanManager,
                 inviteManager, relationManager, warManager, noticeManager);
         lyntraChatHook = new LyntraChatHook(this);
-        placeholderApiHook = new PlaceholderApiHook(this, clanManager, killManager, bankManager);
+        placeholderApiHook = new PlaceholderApiHook(this, clanManager, killManager, bankManager, playerSettingsManager);
 
         vaultHook.setup();
         placeholderApiHook.setup();

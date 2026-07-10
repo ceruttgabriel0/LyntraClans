@@ -7,6 +7,7 @@ import com.lyntra.lyntraclans.domain.Rank;
 import com.lyntra.lyntraclans.managers.BankManager;
 import com.lyntra.lyntraclans.managers.ClanManager;
 import com.lyntra.lyntraclans.managers.KillManager;
+import com.lyntra.lyntraclans.managers.PlayerSettingsManager;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -21,14 +22,16 @@ public final class PlaceholderApiHook {
     private final ClanManager clanManager;
     private final KillManager killManager;
     private final BankManager bankManager;
+    private final PlayerSettingsManager playerSettingsManager;
     private Expansion expansion;
 
     public PlaceholderApiHook(JavaPlugin plugin, ClanManager clanManager, KillManager killManager,
-                               BankManager bankManager) {
+                               BankManager bankManager, PlayerSettingsManager playerSettingsManager) {
         this.plugin = plugin;
         this.clanManager = clanManager;
         this.killManager = killManager;
         this.bankManager = bankManager;
+        this.playerSettingsManager = playerSettingsManager;
     }
 
     public void setup() {
@@ -71,6 +74,7 @@ public final class PlaceholderApiHook {
 
             return switch (params) {
                 case "clan_tag" -> clanOptional.map(Clan::getTag).orElse("");
+                case "clan_tag_formatted" -> formattedTag(offlinePlayer, clanOptional);
                 case "clan_name" -> clanOptional.map(Clan::getName).orElse("");
                 case "clan_color" -> clanOptional.map(Clan::getColor).orElse("");
                 case "clan_description" -> clanOptional.map(Clan::getDescription).orElse("");
@@ -94,6 +98,24 @@ public final class PlaceholderApiHook {
                 case "deaths" -> memberOptional.map(member -> String.valueOf(member.getDeaths())).orElse("0");
                 default -> null;
             };
+        }
+
+        /**
+         * Tag pronta pra colar antes do nome no chat de outro plugin (ex: {@code %lyntraclans_clan_tag_formatted%}
+         * no formato do LyntraChat) - ja vem com colchetes, cor do cla e o espaco final, ou string vazia
+         * (sem colchete vazio) se o jogador nao tiver cla ou tiver desligado a tag pessoal
+         * ({@code /clan alternar tag}, ate agora essa preferencia nunca era lida em lugar nenhum).
+         */
+        private String formattedTag(OfflinePlayer offlinePlayer, Optional<Clan> clanOptional) {
+            if (clanOptional.isEmpty()) {
+                return "";
+            }
+            if (!playerSettingsManager.get(offlinePlayer.getUniqueId()).isShowTag()) {
+                return "";
+            }
+            Clan clan = clanOptional.get();
+            String color = clan.getColor() == null || clan.getColor().isBlank() ? "white" : clan.getColor().toLowerCase();
+            return "<" + color + ">[" + clan.getTag() + "]</" + color + "> ";
         }
 
         private String resolveRankName(Optional<Clan> clanOptional, Optional<ClanMember> memberOptional) {
