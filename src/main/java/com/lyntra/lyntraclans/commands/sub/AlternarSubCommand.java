@@ -34,6 +34,12 @@ public final class AlternarSubCommand extends AbstractClanSubCommand {
                 services.playerSettingsManager().save(player.getUniqueId(), settings);
                 msg(player, settings.isShowTag() ? "alternar-tag-ligado" : "alternar-tag-desligado");
             }
+            case "sidebar" -> {
+                settings.setSidebarEnabled(!settings.isSidebarEnabled());
+                services.playerSettingsManager().save(player.getUniqueId(), settings);
+                services.scoreboardManager().refresh(player);
+                msg(player, settings.isSidebarEnabled() ? "alternar-sidebar-ligado" : "alternar-sidebar-desligado");
+            }
             default -> usage(player, "alternar-uso");
         }
     }

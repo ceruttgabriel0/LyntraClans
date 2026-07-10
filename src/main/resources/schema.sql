@@ -90,5 +90,6 @@ CREATE TABLE IF NOT EXISTS player_data (
     allow_invites INTEGER NOT NULL DEFAULT 1,
     show_warnings INTEGER NOT NULL DEFAULT 1,
     show_tag INTEGER NOT NULL DEFAULT 1,
-    ff_mode TEXT NOT NULL DEFAULT 'AUTO'
+    ff_mode TEXT NOT NULL DEFAULT 'AUTO',
+    sidebar_enabled INTEGER NOT NULL DEFAULT 0
 );

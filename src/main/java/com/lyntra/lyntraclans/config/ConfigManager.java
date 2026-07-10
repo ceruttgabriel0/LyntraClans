@@ -173,4 +173,44 @@ public final class ConfigManager {
     public int memberBonusPerLevel() {
         return config.getInt("leveling.member-bonus-per-level", 1);
     }
+
+    public boolean nametagEnabled() {
+        return config.getBoolean("nametag.enabled", true);
+    }
+
+    public int nametagRefreshIntervalSeconds() {
+        return Math.max(1, config.getInt("nametag.refresh-interval-seconds", 3));
+    }
+
+    public String nametagColorSelf() {
+        return config.getString("nametag.color-self", "aqua");
+    }
+
+    public String nametagColorAlly() {
+        return config.getString("nametag.color-ally", "green");
+    }
+
+    public String nametagColorRival() {
+        return config.getString("nametag.color-rival", "red");
+    }
+
+    public String nametagColorWar() {
+        return config.getString("nametag.color-war", "dark_red");
+    }
+
+    public String nametagColorNeutral() {
+        return config.getString("nametag.color-neutral", "white");
+    }
+
+    public String nametagColorNoClan() {
+        return config.getString("nametag.color-no-clan", "gray");
+    }
+
+    public boolean sidebarEnabledByDefault() {
+        return config.getBoolean("sidebar.enabled-by-default", false);
+    }
+
+    public String sidebarTitle() {
+        return config.getString("sidebar.title", "&6&lMeu Clã");
+    }
 }

@@ -28,7 +28,7 @@ public final class PlayerSettingsManager {
                 return playerDataDao.getSettings(id);
             } catch (SQLException e) {
                 logger.log(Level.SEVERE, "Falha ao carregar preferencias do jogador " + id, e);
-                return new PlayerSettings(true, true, true, com.lyntra.lyntraclans.domain.FfMode.AUTO);
+                return new PlayerSettings(true, true, true, com.lyntra.lyntraclans.domain.FfMode.AUTO, false);
             }
         });
     }

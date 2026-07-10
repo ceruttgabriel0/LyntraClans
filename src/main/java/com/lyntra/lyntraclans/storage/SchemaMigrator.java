@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public final class SchemaMigrator {
 
-    private static final int CURRENT_VERSION = 4;
+    private static final int CURRENT_VERSION = 5;
 
     private static final List<Migration> MIGRATIONS = List.of(
             new Migration() {
@@ -66,6 +66,22 @@ public final class SchemaMigrator {
                     if (!columnExists(connection, "clans", "level")) {
                         try (Statement statement = connection.createStatement()) {
                             statement.execute("ALTER TABLE clans ADD COLUMN level INTEGER NOT NULL DEFAULT 1");
+                        }
+                    }
+                }
+            },
+            new Migration() {
+                @Override
+                public int targetVersion() {
+                    return 5;
+                }
+
+                @Override
+                public void apply(Connection connection) throws SQLException {
+                    if (!columnExists(connection, "player_data", "sidebar_enabled")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE player_data ADD COLUMN sidebar_enabled INTEGER NOT NULL DEFAULT 0");
                         }
                     }
                 }

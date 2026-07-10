@@ -60,6 +60,10 @@ public final class PreferencesFrame extends AbstractFrame {
                 .name(Component.text("Fogo amigo pessoal: " + settings.getFfMode().name()))
                 .lore(Component.text("Clique pra alternar (auto → permitir → bloquear)"))
                 .build());
+        inventory.setItem(15, ItemBuilder.of(settings.isSidebarEnabled() ? Material.LIME_DYE : Material.GRAY_DYE)
+                .name(Component.text("Sidebar do clã: " + (settings.isSidebarEnabled() ? "Sim" : "Não")))
+                .lore(Component.text("Clique pra alternar"))
+                .build());
 
         ChatModeManager.Mode chatMode = services.chatModeManager().getMode(player.getUniqueId());
         inventory.setItem(16, ItemBuilder.of(Material.PAPER)
@@ -105,6 +109,13 @@ public final class PreferencesFrame extends AbstractFrame {
                 };
                 settings.setFfMode(next);
                 services.playerSettingsManager().save(player.getUniqueId(), settings);
+                open(player);
+            }
+            case 15 -> {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                settings.setSidebarEnabled(!settings.isSidebarEnabled());
+                services.playerSettingsManager().save(player.getUniqueId(), settings);
+                services.scoreboardManager().refresh(player);
                 open(player);
             }
             case 16 -> {

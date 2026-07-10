@@ -51,3 +51,26 @@ leveling:
   xp-per-level: 200
   # Slots de membro extra GRATIS (sem custar do banco) que o cla ganha a cada nivel subido.
   member-bonus-per-level: 1
+
+nametag:
+  # Colore o nome do jogador (acima da cabeca e na tablist) de acordo com a relacao do cla de
+  # quem esta vendo. Usa Scoreboard/Team nativo do Bukkit, um scoreboard proprio por jogador
+  # (nao mexe no scoreboard principal do servidor nem em objetivos de outros plugins).
+  enabled: true
+  # De quanto em quanto tempo (segundos) o time de cada jogador e recalculado. Nao precisa ser
+  # instantaneo (e so cor de nome), um intervalo curto ja da a sensacao de tempo real sem
+  # sobrecarregar o servidor recalculando a cada evento de cla/relacao/guerra.
+  refresh-interval-seconds: 3
+  color-self: aqua
+  color-ally: green
+  color-rival: red
+  color-war: dark_red
+  color-neutral: white
+  color-no-clan: gray
+
+sidebar:
+  # Scoreboard lateral opcional (cada jogador liga por conta propria em /clan alternar sidebar
+  # ou pela GUI de preferencias) com os membros do cla online. Desligado por padrao para nao
+  # conflitar com scoreboards de outros plugins do servidor sem o dono pedir.
+  enabled-by-default: false
+  title: "&6&lMeu Clã"

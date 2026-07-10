@@ -15,6 +15,7 @@ import com.lyntra.lyntraclans.managers.NoticeManager;
 import com.lyntra.lyntraclans.managers.PlayerSettingsManager;
 import com.lyntra.lyntraclans.managers.RankManager;
 import com.lyntra.lyntraclans.managers.RelationManager;
+import com.lyntra.lyntraclans.managers.ScoreboardManager;
 import com.lyntra.lyntraclans.managers.UpgradeManager;
 import com.lyntra.lyntraclans.managers.WarManager;
 import com.lyntra.lyntraclans.storage.dao.PlayerDataDao;
@@ -40,6 +41,7 @@ public record ClanServices(
         PlayerSettingsManager playerSettingsManager,
         PlayerDataDao playerDataDao,
         Logger logger,
-        AntiAbuseManager antiAbuseManager
+        AntiAbuseManager antiAbuseManager,
+        ScoreboardManager scoreboardManager
 ) {
 }

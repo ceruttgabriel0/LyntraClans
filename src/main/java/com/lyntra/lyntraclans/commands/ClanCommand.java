@@ -196,7 +196,7 @@ public final class ClanCommand implements CommandExecutor, TabCompleter {
                 return java.util.stream.Stream.of("permitir", "bloquear").filter(s -> s.startsWith(prefix)).toList();
             }
             if (sub.equals("alternar")) {
-                return java.util.stream.Stream.of("convidar", "avisos", "tag").filter(s -> s.startsWith(prefix)).toList();
+                return java.util.stream.Stream.of("convidar", "avisos", "tag", "sidebar").filter(s -> s.startsWith(prefix)).toList();
             }
             if (sub.equals("banco")) {
                 return java.util.stream.Stream.of("saldo", "depositar", "sacar").filter(s -> s.startsWith(prefix)).toList();
