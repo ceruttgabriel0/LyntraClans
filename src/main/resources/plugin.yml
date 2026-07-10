@@ -1,0 +1,17 @@
+name: LyntraClans
+version: '${version}'
+main: com.lyntra.lyntraclans.LyntraClans
+api-version: '1.21'
+author: zNeoaK_ (Gabriel Cerutt)
+website: https://lyntra.com.br
+softdepend: [Vault, PlaceholderAPI, LyntraChat]
+
+commands:
+  clan:
+    description: Comando principal do LyntraClans.
+    aliases: [c]
+
+permissions:
+  lyntraclans.admin:
+    description: Bypassa todas as restricoes do LyntraClans.
+    default: op

@@ -1,0 +1,45 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Configuracao local de JDK (caminho absoluto especifico desta maquina, nunca comitar).
+# Se o Kotlin DSL falhar ao compilar build.gradle.kts com "IllegalArgumentException: <versao>",
+# e porque o JDK do JAVA_HOME e recente demais pro Kotlin compiler embutido no Gradle 8.14.3.
+# Fix: criar gradle.properties com org.gradle.java.home apontando pra um JDK 21.
+gradle.properties
+
+# Run/test environment (run-paper)
+run/
+
+# Material de referencia do AtlasClans (autorizacao pessoal do dono original, mas
+# NUNCA publicar isso nem mencionar o nome publicamente). So especificacao de
+# comportamento pra este projeto, nunca vai pro Git.
+referencia-atlasclans/
+
+# Clone do SimpleClans (GPL-3.0, so pra consulta local, nao precisa versionar aqui)
+referencia-simpleclans/
+
+# Notas internas de desenvolvimento (nao fazem parte da documentacao publica)
+CLANS.md
+MEMORIA.md
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+bin/
+
+# Configuracao local do Claude Code (preferencias pessoais, nao deve ser compartilhada)
+.claude/settings.local.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+crash-reports/

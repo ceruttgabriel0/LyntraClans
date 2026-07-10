@@ -1,0 +1,31 @@
+language: br
+
+clan:
+  tag-min-length: 2
+  tag-max-length: 6
+  name-min-length: 3
+  name-max-length: 32
+  initial-max-members: 10
+  absolute-max-members: 40
+  initial-chest-size: 9
+  creation-cost: 1000.0
+  require-coins-to-create: true
+
+upgrades:
+  member-slot-price: 5000.0
+  chest-slot-price: 3000.0
+  chest-slot-size: 9
+
+ranking:
+  update-interval-minutes: 30
+
+kills:
+  weight-rival: 3.0
+  weight-aliado: 0.0
+  weight-neutro: 1.0
+  weight-civil: 1.0
+  block-damage-same-clan: true
+  block-damage-allies: true
+
+inactivity:
+  clan-purge-days: 60
