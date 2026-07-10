@@ -67,6 +67,18 @@ public final class MainMenuFrame extends AbstractFrame {
                     .name(Component.text("Cargos"))
                     .lore(Component.text("Clique para editar cargos e permissões"))
                     .build());
+            inventory.setItem(18, ItemBuilder.of(Material.SHIELD)
+                    .name(Component.text("Diplomacia"))
+                    .lore(Component.text("Aliados, rivais e guerra"))
+                    .build());
+            inventory.setItem(19, ItemBuilder.of(Material.COMPARATOR)
+                    .name(Component.text("Configurações do clã"))
+                    .lore(Component.text("Cor, tag, descrição, upgrades, desfazer"))
+                    .build());
+            inventory.setItem(22, ItemBuilder.of(Material.CLOCK)
+                    .name(Component.text("Minhas preferências"))
+                    .lore(Component.text("Toggles, fogo amigo, chat, sair"))
+                    .build());
         } else {
             inventory.setItem(11, ItemBuilder.of(Material.BOOK)
                     .name(Component.text("Criar clã"))
@@ -174,6 +186,14 @@ public final class MainMenuFrame extends AbstractFrame {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new RanksFrame(services, clan, () -> open(player)).open(player);
             });
+            case 18 -> clanOptional.ifPresent(clan -> {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                new DiplomacyFrame(services, clan, services.logger(), () -> open(player)).open(player);
+            });
+            case 19 -> clanOptional.ifPresent(clan -> {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                new ClanSettingsFrame(services, clan, services.logger(), () -> open(player)).open(player);
+            });
             case 20 -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new RankingFrame(services, () -> open(player)).open(player);
@@ -182,6 +202,10 @@ public final class MainMenuFrame extends AbstractFrame {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new ClanListFrame(services, () -> open(player)).open(player);
             }
+            case 22 -> clanOptional.ifPresent(clan -> {
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                new PreferencesFrame(services, clan, services.logger(), () -> open(player)).open(player);
+            });
             case 23 -> {
                 player.closeInventory();
                 boolean hasClan = clanOptional.isPresent();

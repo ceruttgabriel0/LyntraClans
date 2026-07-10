@@ -22,7 +22,7 @@ import java.util.logging.Logger;
  * pelo jogador é lido de {@link AnvilInventory#getRenameText()} quando ele clica
  * no slot de resultado (2); ver {@link AnvilInputListener} pro custo de reparo zerado.
  */
-public final class CreateClanAnvilFrame extends AbstractFrame {
+public final class CreateClanAnvilFrame extends AbstractFrame implements AnvilTextCapture {
 
     private enum Step { TAG, NOME }
 

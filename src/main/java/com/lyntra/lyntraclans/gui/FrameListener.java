@@ -21,6 +21,10 @@ public final class FrameListener implements Listener {
         if (event.getClickedInventory() == null || !event.getClickedInventory().equals(event.getInventory())) {
             return;
         }
+        if (event.isRightClick() && frame instanceof RightClickAware rightClickAware) {
+            rightClickAware.handleRightClick(player, event.getSlot());
+            return;
+        }
         frame.handleClick(player, event.getSlot());
     }
 }

@@ -11,10 +11,10 @@ public final class AnvilInputListener implements Listener {
     @EventHandler
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         InventoryHolder holder = event.getInventory().getHolder();
-        if (holder instanceof CreateClanAnvilFrame frame) {
+        if (holder instanceof AnvilTextCapture capture) {
             AnvilView view = event.getView();
             view.setRepairCost(0);
-            frame.captureRenameText(view.getRenameText());
+            capture.captureRenameText(view.getRenameText());
         }
     }
 }
