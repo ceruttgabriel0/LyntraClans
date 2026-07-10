@@ -140,6 +140,14 @@ public final class ClanCommand implements CommandExecutor, TabCompleter {
         return true;
     }
 
+    private static final java.util.Set<String> PLAYER_ARG_COMMANDS = java.util.Set.of(
+            "convidar", "expulsar", "promover", "rebaixar", "transferir", "confiar", "naoconfiar",
+            "detalhes", "mortes");
+    private static final java.util.Set<String> CLAN_TAG_ARG_COMMANDS = java.util.Set.of(
+            "info", "perfil", "membros");
+    private static final java.util.Set<String> CONFIRM_ARG_COMMANDS = java.util.Set.of(
+            "sair", "abandonar", "desfazer", "debandar");
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
@@ -152,6 +160,86 @@ public final class ClanCommand implements CommandExecutor, TabCompleter {
             }
             return result;
         }
+        if (args.length == 2) {
+            String sub = args[0].toLowerCase();
+            String prefix = args[1].toLowerCase();
+            if (PLAYER_ARG_COMMANDS.contains(sub)) {
+                return matchingOnlinePlayers(prefix);
+            }
+            if (CLAN_TAG_ARG_COMMANDS.contains(sub)) {
+                return matchingClanTags(prefix);
+            }
+            if (CONFIRM_ARG_COMMANDS.contains(sub)) {
+                return "confirmar".startsWith(prefix) ? List.of("confirmar") : List.of();
+            }
+            if (sub.equals("rival") || sub.equals("alianca")) {
+                List<String> options = new ArrayList<>();
+                if ("remover".startsWith(prefix)) {
+                    options.add("remover");
+                }
+                options.addAll(matchingClanTags(prefix));
+                return options;
+            }
+            if (sub.equals("guerra")) {
+                return java.util.stream.Stream.of("iniciar", "finalizar")
+                        .filter(s -> s.startsWith(prefix)).toList();
+            }
+            if (sub.equals("cargo")) {
+                return java.util.stream.Stream.of("criar", "remover", "permissao", "definir", "desatribuir",
+                                "permissoes", "nomeexibicao")
+                        .filter(s -> s.startsWith(prefix)).toList();
+            }
+            if (sub.equals("ff")) {
+                return java.util.stream.Stream.of("auto", "permitir", "bloquear").filter(s -> s.startsWith(prefix)).toList();
+            }
+            if (sub.equals("clanff")) {
+                return java.util.stream.Stream.of("permitir", "bloquear").filter(s -> s.startsWith(prefix)).toList();
+            }
+            if (sub.equals("alternar")) {
+                return java.util.stream.Stream.of("convidar", "avisos", "tag").filter(s -> s.startsWith(prefix)).toList();
+            }
+            if (sub.equals("banco")) {
+                return java.util.stream.Stream.of("saldo", "depositar", "sacar").filter(s -> s.startsWith(prefix)).toList();
+            }
+            if (sub.equals("upgrades")) {
+                return java.util.stream.Stream.of("membros", "bau").filter(s -> s.startsWith(prefix)).toList();
+            }
+            if (sub.equals("listar") || sub.equals("lista")) {
+                return "ordem".startsWith(prefix) ? List.of("ordem") : List.of();
+            }
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("cargo")
+                && (args[1].equalsIgnoreCase("definir") || args[1].equalsIgnoreCase("desatribuir"))) {
+            return matchingOnlinePlayers(args[2].toLowerCase());
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("listar") && args[1].equalsIgnoreCase("ordem")) {
+            String prefix = args[2].toLowerCase();
+            return java.util.stream.Stream.of("nome", "membros", "kdr").filter(s -> s.startsWith(prefix)).toList();
+        }
+        if (args.length == 3 && args[0].equalsIgnoreCase("guerra")
+                && (args[1].equalsIgnoreCase("iniciar") || args[1].equalsIgnoreCase("finalizar"))) {
+            return matchingClanTags(args[2].toLowerCase());
+        }
         return List.of();
+    }
+
+    private List<String> matchingOnlinePlayers(String prefix) {
+        List<String> result = new ArrayList<>();
+        for (org.bukkit.entity.Player online : org.bukkit.Bukkit.getOnlinePlayers()) {
+            if (online.getName().toLowerCase().startsWith(prefix)) {
+                result.add(online.getName());
+            }
+        }
+        return result;
+    }
+
+    private List<String> matchingClanTags(String prefix) {
+        List<String> result = new ArrayList<>();
+        for (var clan : services.clanManager().getAllClans()) {
+            if (clan.getTag().toLowerCase().startsWith(prefix)) {
+                result.add(clan.getTag());
+            }
+        }
+        return result;
     }
 }
