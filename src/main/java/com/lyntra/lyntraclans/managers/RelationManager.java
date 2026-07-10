@@ -51,6 +51,10 @@ public final class RelationManager {
             if (outgoing.get().getType() == RelationType.ALLY_PENDING) {
                 return AllianceResult.ALREADY_PENDING;
             }
+            // Sobra so o caso RIVAL aqui (relacao unilateral existente na mesma direcao) - precisa
+            // apagar antes de inserir, senao bate na constraint UNIQUE(clan_id, target_clan_id) e
+            // vira excecao (bug real achado propondo alianca com quem ja era rival).
+            relationDao.delete(outgoing.get().getId());
         }
         relationDao.insert(requester.getId(), target.getId(), RelationType.ALLY_PENDING, System.currentTimeMillis());
         return AllianceResult.REQUEST_SENT;
