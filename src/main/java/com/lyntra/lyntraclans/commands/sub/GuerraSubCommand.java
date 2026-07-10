@@ -43,6 +43,10 @@ public final class GuerraSubCommand extends AbstractClanSubCommand {
         }
 
         if (args[0].equalsIgnoreCase("iniciar")) {
+            if (services.relationManager().isAlly(clan.getId(), target.getId())) {
+                msg(player, "guerra-aliado-bloqueado", "tag", target.getTag());
+                return;
+            }
             if (!services.warManager().startWar(clan, target)) {
                 msg(player, "guerra-ja-em-guerra", "tag", target.getTag());
                 return;

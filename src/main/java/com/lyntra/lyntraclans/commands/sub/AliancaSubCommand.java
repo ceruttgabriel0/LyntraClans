@@ -88,6 +88,13 @@ public final class AliancaSubCommand extends AbstractClanSubCommand {
                 case ACCEPTED -> {
                     notifyClan(clan, "alianca-sucesso", "tag", target.getTag(), "nome", target.getName());
                     notifyClan(target, "alianca-sucesso", "tag", clan.getTag(), "nome", clan.getName());
+                    // Aliar com quem estava em guerra encerra a guerra automaticamente - os dois estados
+                    // sao contraditorios (mesma logica que aliar ja limpa rivalidade em RelationManager).
+                    if (services.warManager().isAtWar(clan.getId(), target.getId())
+                            && services.warManager().endWar(clan, target)) {
+                        notifyClan(clan, "guerra-finalizada-anuncio", "tag", target.getTag());
+                        notifyClan(target, "guerra-finalizada-anuncio", "tag", clan.getTag());
+                    }
                 }
                 case ALREADY_PENDING -> msg(player, "alianca-ja-pendente", "tag", target.getTag());
                 case ALREADY_ALLIED -> msg(player, "alianca-ja-aliado", "tag", target.getTag());

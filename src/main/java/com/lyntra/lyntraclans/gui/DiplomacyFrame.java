@@ -165,9 +165,30 @@ public final class DiplomacyFrame extends AbstractFrame implements RightClickAwa
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new ClanPickerFrame(services, clan, "Propor aliança a...", target -> {
                     try {
-                        services.relationManager().proposeOrAcceptAlliance(clan, target);
-                        player.sendMessage(services.languageManager().get("alianca-pedido-enviado",
-                                "tag", target.getTag()));
+                        var result = services.relationManager().proposeOrAcceptAlliance(clan, target);
+                        switch (result) {
+                            case REQUEST_SENT -> {
+                                player.sendMessage(services.languageManager().get("alianca-pedido-enviado",
+                                        "tag", target.getTag()));
+                                notifyMembers(target, "alianca-pedido-recebido", "tag", clan.getTag(),
+                                        "nome", clan.getName());
+                            }
+                            case ACCEPTED -> {
+                                notifyMembers(clan, "alianca-sucesso", "tag", target.getTag(),
+                                        "nome", target.getName());
+                                notifyMembers(target, "alianca-sucesso", "tag", clan.getTag(),
+                                        "nome", clan.getName());
+                                if (services.warManager().isAtWar(clan.getId(), target.getId())
+                                        && services.warManager().endWar(clan, target)) {
+                                    notifyMembers(clan, "guerra-finalizada-anuncio", "tag", target.getTag());
+                                    notifyMembers(target, "guerra-finalizada-anuncio", "tag", clan.getTag());
+                                }
+                            }
+                            case ALREADY_PENDING -> player.sendMessage(services.languageManager()
+                                    .get("alianca-ja-pendente", "tag", target.getTag()));
+                            case ALREADY_ALLIED -> player.sendMessage(services.languageManager()
+                                    .get("alianca-ja-aliado", "tag", target.getTag()));
+                        }
                     } catch (SQLException e) {
                         logger.log(Level.SEVERE, "Falha ao propor alianca pela GUI", e);
                         player.sendMessage(services.languageManager().get("erro-interno"));
@@ -200,6 +221,12 @@ public final class DiplomacyFrame extends AbstractFrame implements RightClickAwa
                 }
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new ClanPickerFrame(services, clan, "Declarar guerra a...", target -> {
+                    if (services.relationManager().isAlly(clan.getId(), target.getId())) {
+                        player.sendMessage(services.languageManager().get("guerra-aliado-bloqueado",
+                                "tag", target.getTag()));
+                        open(player);
+                        return;
+                    }
                     boolean started = services.warManager().startWar(clan, target);
                     player.sendMessage(services.languageManager().get(
                             started ? "guerra-iniciada-anuncio" : "guerra-ja-em-guerra", "tag", target.getTag()));
@@ -229,5 +256,14 @@ public final class DiplomacyFrame extends AbstractFrame implements RightClickAwa
             return true;
         }
         return rank.has(permission);
+    }
+
+    private void notifyMembers(Clan target, String key, String... pairs) {
+        services.clanManager().getMembers(target.getId()).forEach(m -> {
+            Player online = Bukkit.getPlayer(m.getUuid());
+            if (online != null) {
+                online.sendMessage(services.languageManager().get(key, pairs));
+            }
+        });
     }
 }

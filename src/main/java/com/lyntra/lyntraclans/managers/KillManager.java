@@ -129,10 +129,15 @@ public final class KillManager {
         double totalWeighted = 0;
         double totalDeaths = 0;
         for (ClanMember member : clanManager.getMembers(clan.getId())) {
+            // Reaproveita a mesma formula do KDR individual (member.getWeightedKdr ja multiplicado
+            // de volta pelas mortes do proprio membro) pra nao duplicar a conta e esquecer um termo
+            // como o bonus de guerra - foi exatamente isso que aconteceu aqui antes (bug real achado
+            // na bateria de teste massiva: KDR do cla nao batia com a soma dos KDRs individuais).
             totalWeighted += member.getKills(KillCategory.RIVAL) * configManager.killWeight(KillCategory.RIVAL)
                     + member.getKills(KillCategory.ALIADO) * configManager.killWeight(KillCategory.ALIADO)
                     + member.getKills(KillCategory.NEUTRO) * configManager.killWeight(KillCategory.NEUTRO)
-                    + member.getKills(KillCategory.CIVIL) * configManager.killWeight(KillCategory.CIVIL);
+                    + member.getKills(KillCategory.CIVIL) * configManager.killWeight(KillCategory.CIVIL)
+                    + member.getWarBonusWeight();
             totalDeaths += member.getDeaths();
         }
         return totalDeaths == 0 ? totalWeighted : totalWeighted / totalDeaths;

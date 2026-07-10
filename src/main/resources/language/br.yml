@@ -271,6 +271,7 @@ clanff-bloqueado: '{prefix}<green>Fogo amigo do clã agora está <yellow>bloquea
 
 guerra-uso: '/clan guerra <iniciar|finalizar> <tag>'
 guerra-mesmo-clan: '{prefix}<red>Você não pode declarar guerra contra o próprio clã.'
+guerra-aliado-bloqueado: '{prefix}<red>Você não pode declarar guerra contra um aliado. Desfaça a aliança com <yellow>{tag}<red> primeiro.'
 guerra-ja-em-guerra: '{prefix}<red>Seu clã já está em guerra com <yellow>{tag}<red>.'
 guerra-nao-em-guerra: '{prefix}<red>Seu clã não está em guerra com <yellow>{tag}<red>.'
 guerra-iniciada-anuncio: '{prefix}<red>Guerra declarada contra <yellow>[{tag}]<red>!'
@@ -333,7 +334,7 @@ ajuda-com-clan:
   - ' <yellow>/clan saude <gray>- Sinais vitais do clã e aliados'
   - ' <yellow>/clan listarsaldo <gray>- Clãs mais ricos'
   - ' <yellow>/clan avisos [adicionar <msg>] <gray>- Quadro de avisos'
-  - ' <yellow>/clan alternar <convidar|avisos|tag> <gray>- Preferências pessoais'
+  - ' <yellow>/clan alternar <convidar|avisos|tag|sidebar> <gray>- Preferências pessoais'
   - ' <yellow>/clan ff <auto|permitir|bloquear> <gray>- Fogo amigo pessoal'
   - ' <yellow>/clan clanff <permitir|bloquear> <gray>- Fogo amigo do clã'
   - ' <yellow>/clan guerra <iniciar|finalizar> <tag> <gray>- Guerra entre clãs'
