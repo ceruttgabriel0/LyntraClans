@@ -84,6 +84,12 @@ public final class MemberActionFrame extends AbstractFrame {
                     .name(Component.text(target.isTrusted() ? "Remover confiança" : "Marcar como confiável"))
                     .build());
         }
+        if (has(viewerRank, viewer, ClanPermission.GERENCIAR_CARGOS) && !isLeader(target)) {
+            inventory.setItem(16, ItemBuilder.of(Material.NAME_TAG)
+                    .name(Component.text("Definir cargo"))
+                    .lore(Component.text("Clique pra escolher um cargo do clã"))
+                    .build());
+        }
         inventory.setItem(22, ItemBuilder.of(Material.ARROW).name(Component.text("Voltar")).build());
     }
 
@@ -137,16 +143,48 @@ public final class MemberActionFrame extends AbstractFrame {
                 }
             }
             case 13 -> {
+                // Botao so aparece renderizado quando essas condicoes batem (ver populate()), mas o
+                // clique chega no handler por slot independente do que foi desenhado - sem reconferir
+                // aqui, um clique bruto no slot 13 expulsaria gente mesmo sem permissao EXPULSAR.
+                Rank viewerRank = clan.getRankById(viewer.getRankId());
+                Rank targetRank = clan.getRankById(target.getRankId());
+                boolean viewerIsLeader = isLeader(viewer);
+                boolean canKick = has(viewerRank, viewer, ClanPermission.EXPULSAR)
+                        && !target.getUuid().equals(viewer.getUuid())
+                        && (targetRank == null || viewerRank == null || targetRank.getPriority() < viewerRank.getPriority()
+                        || viewerIsLeader);
+                if (!canKick) {
+                    player.sendMessage(services.languageManager().get("sem-permissao-clan"));
+                    return;
+                }
                 services.memberManager().kick(clan, target);
                 player.sendMessage(services.languageManager().get("expulsar-sucesso", "jogador", nameOf(target)));
                 onBack.run();
             }
             case 15 -> {
+                Rank viewerRank = clan.getRankById(viewer.getRankId());
+                if (!has(viewerRank, viewer, ClanPermission.GERENCIAR_CONFIANCA)) {
+                    player.sendMessage(services.languageManager().get("sem-permissao-clan"));
+                    return;
+                }
                 target.setTrusted(!target.isTrusted());
                 services.clanManager().persistMember(target);
                 player.sendMessage(services.languageManager().get(
                         target.isTrusted() ? "confiar-sucesso" : "naoconfiar-sucesso", "jogador", nameOf(target)));
                 open(player);
+            }
+            case 16 -> {
+                Rank viewerRank = clan.getRankById(viewer.getRankId());
+                if (!has(viewerRank, viewer, ClanPermission.GERENCIAR_CARGOS) || isLeader(target)) {
+                    player.sendMessage(services.languageManager().get("sem-permissao-clan"));
+                    return;
+                }
+                new RankPickerFrame(services, clan, rank -> {
+                    services.memberManager().setRank(target, rank);
+                    player.sendMessage(services.languageManager().get("cargo-definido",
+                            "jogador", nameOf(target), "cargo", rank.getDisplayName()));
+                    onBack.run();
+                }, () -> open(player)).open(player);
             }
             case 22 -> onBack.run();
             default -> {

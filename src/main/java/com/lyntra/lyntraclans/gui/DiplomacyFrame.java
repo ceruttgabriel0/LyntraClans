@@ -132,8 +132,12 @@ public final class DiplomacyFrame extends AbstractFrame implements RightClickAwa
                 boolean atWar = services.warManager().isAtWar(clan.getId(), rival.getId());
                 if (atWar) {
                     services.warManager().endWar(clan, rival);
+                    notifyMembers(clan, "guerra-finalizada-anuncio", "tag", rival.getTag());
+                    notifyMembers(rival, "guerra-finalizada-anuncio", "tag", clan.getTag());
                 } else {
                     services.warManager().startWar(clan, rival);
+                    notifyMembers(clan, "guerra-iniciada-anuncio", "tag", rival.getTag());
+                    notifyMembers(rival, "guerra-iniciada-anuncio", "tag", clan.getTag());
                 }
                 open(player);
                 return;

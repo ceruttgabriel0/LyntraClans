@@ -56,6 +56,10 @@ public final class ClanSettingsFrame extends AbstractFrame {
                 .name(Component.text("Tag: " + clan.getTag()))
                 .lore(Component.text("Clique pra editar"))
                 .build());
+        inventory.setItem(13, ItemBuilder.of(Material.RED_BED)
+                .name(Component.text("Definir base aqui"))
+                .lore(Component.text(clan.hasHome() ? "Move a base pra sua posição atual" : "Clique pra definir a base do clã"))
+                .build());
         inventory.setItem(14, ItemBuilder.of(clan.isFriendlyFire() ? Material.LIME_DYE : Material.GRAY_DYE)
                 .name(Component.text("Fogo amigo do clã: " + (clan.isFriendlyFire() ? "Permitido" : "Bloqueado")))
                 .lore(Component.text("Clique pra alternar"))
@@ -152,6 +156,19 @@ public final class ClanSettingsFrame extends AbstractFrame {
                     player.closeInventory();
                     player.sendMessage(services.languageManager().get("mudartag-sucesso", "tag", text));
                 }).open(player);
+            }
+            case 13 -> {
+                if (!hasPermission(viewer, ClanPermission.ALTERAR_HOME)) {
+                    player.sendMessage(services.languageManager().get("sem-permissao-clan"));
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                var location = player.getLocation();
+                clan.setHome(location.getWorld().getName(), location.getX(), location.getY(), location.getZ(),
+                        location.getYaw(), location.getPitch());
+                services.clanManager().persistClan(clan);
+                player.sendMessage(services.languageManager().get("sethome-sucesso"));
+                open(player);
             }
             case 14 -> {
                 if (!hasPermission(viewer, ClanPermission.GERENCIAR_FF_CLA)) {
