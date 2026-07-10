@@ -44,6 +44,11 @@ public final class DesfazerSubCommand extends AbstractClanSubCommand {
         if (!confirming) {
             pendingConfirmations.put(player.getUniqueId(), System.currentTimeMillis());
             msg(player, "desfazer-confirmar", "tag", clan.getTag());
+            if (clan.getBalance() > 0) {
+                // Achado tentando quebrar o plugin de proposito: desfazer apagava o saldo do banco
+                // sem nenhum aviso especifico, so o aviso generico de "acao nao pode ser desfeita".
+                msg(player, "desfazer-confirmar-saldo", "saldo", services.bankManager().format(clan.getBalance()));
+            }
             return;
         }
         if (requestedAt == null || System.currentTimeMillis() - requestedAt > CONFIRM_WINDOW_MILLIS) {

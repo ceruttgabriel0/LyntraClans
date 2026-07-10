@@ -29,6 +29,7 @@ moderacao-palavra-banida: '{prefix}<red>That text contains a word that is not al
 moderacao-cooldown-criar: '{prefix}<red>Wait <yellow>{segundos}s<red> before creating another clan.'
 
 desfazer-confirmar: '{prefix}<yellow>Are you sure you want to disband <yellow>[{tag}]<yellow>? This cannot be undone. Use <yellow>/clan desfazer confirmar<yellow> within 30 seconds.'
+desfazer-confirmar-saldo: '{prefix}<red>Warning: the bank balance (<yellow>{saldo}<red>) will be lost!'
 desfazer-sucesso: '{prefix}<green>Clan <yellow>[{tag}]<green> was disbanded.'
 desfazer-somente-lider: '{prefix}<red>Only the clan leader can disband the clan.'
 desfazer-expirado: '{prefix}<red>Confirmation expired. Use <yellow>/clan desfazer<red> again.'

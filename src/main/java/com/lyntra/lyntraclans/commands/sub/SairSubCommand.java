@@ -40,6 +40,11 @@ public final class SairSubCommand extends AbstractClanSubCommand {
         if (!confirming) {
             pendingConfirmations.put(player.getUniqueId(), System.currentTimeMillis());
             msg(player, "sair-confirmar", "tag", clan.getTag());
+            // Se for o unico membro, sair tambem desfaz o cla (mesmo caminho de codigo la embaixo) -
+            // mesmo aviso de saldo perdido que o /clan desfazer ja da, pra nao pegar ninguem de surpresa.
+            if (services.clanManager().getMembers(clan.getId()).size() <= 1 && clan.getBalance() > 0) {
+                msg(player, "desfazer-confirmar-saldo", "saldo", services.bankManager().format(clan.getBalance()));
+            }
             return;
         }
         if (requestedAt == null || System.currentTimeMillis() - requestedAt > CONFIRM_WINDOW_MILLIS) {

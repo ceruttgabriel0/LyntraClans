@@ -197,7 +197,12 @@ public final class ClanSettingsFrame extends AbstractFrame {
                     return;
                 }
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
-                new ConfirmFrame("Desfazer o clã [" + clan.getTag() + "]? Ação irreversível!", () -> {
+                String disbandWarning = "Desfazer o clã [" + clan.getTag() + "]? Ação irreversível!";
+                if (clan.getBalance() > 0) {
+                    disbandWarning += " Saldo do banco (" + services.bankManager().format(clan.getBalance())
+                            + ") será perdido!";
+                }
+                new ConfirmFrame(disbandWarning, () -> {
                     try {
                         String tag = clan.getTag();
                         services.clanManager().disbandClan(clan);

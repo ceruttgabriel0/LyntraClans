@@ -29,6 +29,7 @@ moderacao-palavra-banida: '{prefix}<red>Esse texto contém uma palavra não perm
 moderacao-cooldown-criar: '{prefix}<red>Espere <yellow>{segundos}s<red> antes de criar outro clã.'
 
 desfazer-confirmar: '{prefix}<yellow>Tem certeza que quer desfazer o clã <yellow>[{tag}]<yellow>? Essa ação não pode ser desfeita. Use <yellow>/clan desfazer confirmar<yellow> em até 30 segundos.'
+desfazer-confirmar-saldo: '{prefix}<red>Atenção: o saldo do banco (<yellow>{saldo}<red>) será perdido!'
 desfazer-sucesso: '{prefix}<green>O clã <yellow>[{tag}]<green> foi desfeito.'
 desfazer-somente-lider: '{prefix}<red>Somente o líder do clã pode desfazer o clã.'
 desfazer-expirado: '{prefix}<red>Confirmação expirada. Use <yellow>/clan desfazer<red> novamente.'
