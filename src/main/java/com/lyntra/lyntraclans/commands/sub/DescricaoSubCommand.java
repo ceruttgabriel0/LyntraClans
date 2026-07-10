@@ -5,6 +5,7 @@ import com.lyntra.lyntraclans.commands.ClanServices;
 import com.lyntra.lyntraclans.domain.Clan;
 import com.lyntra.lyntraclans.domain.ClanMember;
 import com.lyntra.lyntraclans.domain.ClanPermission;
+import com.lyntra.lyntraclans.util.ProfanityFilter;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -33,6 +34,10 @@ public final class DescricaoSubCommand extends AbstractClanSubCommand {
         String description = String.join(" ", args);
         if (description.length() > 100) {
             description = description.substring(0, 100);
+        }
+        if (ProfanityFilter.containsBannedWord(description, services.configManager().bannedWords())) {
+            msg(player, "moderacao-palavra-banida");
+            return;
         }
         clan.setDescription(description);
         services.clanManager().persistClan(clan);

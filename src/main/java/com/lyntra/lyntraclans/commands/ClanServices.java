@@ -4,6 +4,7 @@ import com.lyntra.lyntraclans.config.ConfigManager;
 import com.lyntra.lyntraclans.config.LanguageManager;
 import com.lyntra.lyntraclans.hooks.LyntraChatHook;
 import com.lyntra.lyntraclans.hooks.VaultHook;
+import com.lyntra.lyntraclans.managers.AntiAbuseManager;
 import com.lyntra.lyntraclans.managers.BankManager;
 import com.lyntra.lyntraclans.managers.ChatModeManager;
 import com.lyntra.lyntraclans.managers.ClanManager;
@@ -38,6 +39,7 @@ public record ClanServices(
         NoticeManager noticeManager,
         PlayerSettingsManager playerSettingsManager,
         PlayerDataDao playerDataDao,
-        Logger logger
+        Logger logger,
+        AntiAbuseManager antiAbuseManager
 ) {
 }

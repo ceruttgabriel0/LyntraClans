@@ -34,3 +34,12 @@ kills:
 
 inactivity:
   clan-purge-days: 60
+
+moderation:
+  # Lista de palavras banidas em tag/nome/descricao do cla (comparacao sem acento, sem
+  # diferenciar maiuscula/minuscula, por substring). Vazio por padrao - preencha com o
+  # que fizer sentido pro seu servidor.
+  banned-words: []
+  # Tempo de espera (segundos) depois de desfazer um clã antes de poder criar outro,
+  # evita o ciclo criar/desfazer repetido pra farmar nome/tag.
+  recreate-cooldown-seconds: 300

@@ -5,6 +5,7 @@ import com.lyntra.lyntraclans.commands.ClanServices;
 import com.lyntra.lyntraclans.domain.Clan;
 import com.lyntra.lyntraclans.domain.ClanMember;
 import com.lyntra.lyntraclans.domain.ClanPermission;
+import com.lyntra.lyntraclans.util.ProfanityFilter;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
@@ -39,6 +40,10 @@ public final class MudarTagSubCommand extends AbstractClanSubCommand {
         }
         if (!newTag.matches("[a-zA-Z0-9]+")) {
             msg(player, "criar-tag-caracteres");
+            return;
+        }
+        if (ProfanityFilter.containsBannedWord(newTag, services.configManager().bannedWords())) {
+            msg(player, "moderacao-palavra-banida");
             return;
         }
         if (services.clanManager().tagInUse(newTag)) {

@@ -107,6 +107,11 @@ public final class ClanSettingsFrame extends AbstractFrame {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new AnvilTextInputFrame(services, "Nova descrição", "Digite a descrição", text -> {
                     String description = text.length() > 100 ? text.substring(0, 100) : text;
+                    if (com.lyntra.lyntraclans.util.ProfanityFilter.containsBannedWord(description,
+                            services.configManager().bannedWords())) {
+                        player.sendMessage(services.languageManager().get("moderacao-palavra-banida"));
+                        return;
+                    }
                     clan.setDescription(description);
                     services.clanManager().persistClan(clan);
                     player.closeInventory();
@@ -129,6 +134,11 @@ public final class ClanSettingsFrame extends AbstractFrame {
                     }
                     if (!text.matches("[a-zA-Z0-9]+")) {
                         player.sendMessage(services.languageManager().get("criar-tag-caracteres"));
+                        return;
+                    }
+                    if (com.lyntra.lyntraclans.util.ProfanityFilter.containsBannedWord(text,
+                            services.configManager().bannedWords())) {
+                        player.sendMessage(services.languageManager().get("moderacao-palavra-banida"));
                         return;
                     }
                     if (services.clanManager().tagInUse(text)) {
@@ -195,6 +205,7 @@ public final class ClanSettingsFrame extends AbstractFrame {
                         services.relationManager().removeAllRelations(clan.getId());
                         services.warManager().removeAllWars(clan.getId());
                         services.noticeManager().removeAllForClan(clan.getId());
+                        services.antiAbuseManager().recordDisband(player.getUniqueId());
                         player.closeInventory();
                         player.sendMessage(services.languageManager().get("desfazer-sucesso", "tag", tag));
                     } catch (SQLException e) {

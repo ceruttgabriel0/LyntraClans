@@ -3,6 +3,7 @@ package com.lyntra.lyntraclans.gui;
 import com.lyntra.lyntraclans.commands.ClanServices;
 import com.lyntra.lyntraclans.config.ConfigManager;
 import com.lyntra.lyntraclans.domain.Clan;
+import com.lyntra.lyntraclans.util.ProfanityFilter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
@@ -77,6 +78,13 @@ public final class CreateClanAnvilFrame extends AbstractFrame implements AnvilTe
 
     private void confirmTag(Player player, String tag) {
         ConfigManager config = services.configManager();
+        long cooldown = services.antiAbuseManager().remainingCooldownSeconds(player.getUniqueId(),
+                config.recreateCooldownSeconds());
+        if (cooldown > 0) {
+            player.sendMessage(services.languageManager().get("moderacao-cooldown-criar",
+                    "segundos", String.valueOf(cooldown)));
+            return;
+        }
         if (tag.length() < config.tagMinLength() || tag.length() > config.tagMaxLength()) {
             player.sendMessage(services.languageManager().get("criar-tag-tamanho",
                     "min", String.valueOf(config.tagMinLength()), "max", String.valueOf(config.tagMaxLength())));
@@ -84,6 +92,10 @@ public final class CreateClanAnvilFrame extends AbstractFrame implements AnvilTe
         }
         if (!tag.matches("[a-zA-Z0-9]+")) {
             player.sendMessage(services.languageManager().get("criar-tag-caracteres"));
+            return;
+        }
+        if (ProfanityFilter.containsBannedWord(tag, config.bannedWords())) {
+            player.sendMessage(services.languageManager().get("moderacao-palavra-banida"));
             return;
         }
         if (services.clanManager().tagInUse(tag)) {
@@ -102,6 +114,10 @@ public final class CreateClanAnvilFrame extends AbstractFrame implements AnvilTe
         if (name.length() < config.nameMinLength() || name.length() > config.nameMaxLength()) {
             player.sendMessage(services.languageManager().get("criar-nome-tamanho",
                     "min", String.valueOf(config.nameMinLength()), "max", String.valueOf(config.nameMaxLength())));
+            return;
+        }
+        if (ProfanityFilter.containsBannedWord(name, config.bannedWords())) {
+            player.sendMessage(services.languageManager().get("moderacao-palavra-banida"));
             return;
         }
         if (services.clanManager().nameInUse(name)) {

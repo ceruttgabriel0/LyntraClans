@@ -58,6 +58,7 @@ public final class DesfazerSubCommand extends AbstractClanSubCommand {
             services.relationManager().removeAllRelations(clan.getId());
             services.warManager().removeAllWars(clan.getId());
             services.noticeManager().removeAllForClan(clan.getId());
+            services.antiAbuseManager().recordDisband(player.getUniqueId());
             msg(player, "desfazer-sucesso", "tag", tag);
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Falha ao desfazer cla", e);

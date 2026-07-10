@@ -25,6 +25,8 @@ criar-nome-em-uso: '{prefix}<red>A clan already uses the name <yellow>{nome}<red
 criar-sem-coins: '{prefix}<red>You need <yellow>{custo}<red> to create a clan.'
 criar-sucesso: '{prefix}<green>Clan <yellow>[{tag}] {nome}<green> created successfully! Use <yellow>/clan<green> to open the menu.'
 criacao-gui-texto-vazio: '{prefix}<red>Rename the item on the anvil before clicking the result.'
+moderacao-palavra-banida: '{prefix}<red>That text contains a word that is not allowed on this server.'
+moderacao-cooldown-criar: '{prefix}<red>Wait <yellow>{segundos}s<red> before creating another clan.'
 
 desfazer-confirmar: '{prefix}<yellow>Are you sure you want to disband <yellow>[{tag}]<yellow>? This cannot be undone. Use <yellow>/clan desfazer confirmar<yellow> within 30 seconds.'
 desfazer-sucesso: '{prefix}<green>Clan <yellow>[{tag}]<green> was disbanded.'

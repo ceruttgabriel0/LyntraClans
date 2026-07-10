@@ -4,6 +4,7 @@ import com.lyntra.lyntraclans.commands.AbstractClanSubCommand;
 import com.lyntra.lyntraclans.commands.ClanServices;
 import com.lyntra.lyntraclans.config.ConfigManager;
 import com.lyntra.lyntraclans.domain.Clan;
+import com.lyntra.lyntraclans.util.ProfanityFilter;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
@@ -28,10 +29,21 @@ public final class CriarSubCommand extends AbstractClanSubCommand {
         if (!requireNoClan(player)) {
             return;
         }
+        long cooldown = services.antiAbuseManager().remainingCooldownSeconds(player.getUniqueId(),
+                services.configManager().recreateCooldownSeconds());
+        if (cooldown > 0) {
+            msg(player, "moderacao-cooldown-criar", "segundos", String.valueOf(cooldown));
+            return;
+        }
         String tag = args[0];
         String name = String.join(" ", java.util.Arrays.copyOfRange(args, 1, args.length));
         ConfigManager config = services.configManager();
 
+        if (ProfanityFilter.containsBannedWord(tag, config.bannedWords())
+                || ProfanityFilter.containsBannedWord(name, config.bannedWords())) {
+            msg(player, "moderacao-palavra-banida");
+            return;
+        }
         if (tag.length() < config.tagMinLength() || tag.length() > config.tagMaxLength()) {
             msg(player, "criar-tag-tamanho", "min", String.valueOf(config.tagMinLength()),
                     "max", String.valueOf(config.tagMaxLength()));

@@ -1,7 +1,16 @@
 package com.lyntra.lyntraclans.config;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.logging.Level;
 
 public final class ConfigManager {
 
@@ -14,8 +23,44 @@ public final class ConfigManager {
 
     public void load() {
         plugin.saveDefaultConfig();
+        mergeMissingKeys();
         plugin.reloadConfig();
         this.config = plugin.getConfig();
+    }
+
+    /**
+     * Servidores que ja rodaram uma versao antiga do plugin tem um config.yml em disco que
+     * nunca e sobrescrito (saveDefaultConfig so grava se o arquivo nao existir). Sem isso,
+     * uma opcao nova adicionada numa atualizacao (ex: upgrades.chest-slot-max) ficaria
+     * faltando pra sempre nesses servidores, caindo sempre no valor padrao do codigo sem
+     * o dono do servidor saber que existe ou poder configurar. Mesmo fix ja usado no
+     * LanguageManager pros arquivos de idioma.
+     */
+    private void mergeMissingKeys() {
+        File file = new File(plugin.getDataFolder(), "config.yml");
+        try (InputStream stream = plugin.getResource("config.yml")) {
+            if (stream == null || !file.exists()) {
+                return;
+            }
+            YamlConfiguration onDisk = YamlConfiguration.loadConfiguration(file);
+            YamlConfiguration defaults = YamlConfiguration
+                    .loadConfiguration(new InputStreamReader(stream, StandardCharsets.UTF_8));
+            boolean changed = false;
+            for (String key : defaults.getKeys(true)) {
+                if (defaults.isConfigurationSection(key)) {
+                    continue;
+                }
+                if (!onDisk.contains(key)) {
+                    onDisk.set(key, defaults.get(key));
+                    changed = true;
+                }
+            }
+            if (changed) {
+                onDisk.save(file);
+            }
+        } catch (IOException e) {
+            plugin.getLogger().log(Level.WARNING, "Falha ao mesclar chaves novas em config.yml", e);
+        }
     }
 
     public String language() {
@@ -103,5 +148,14 @@ public final class ConfigManager {
 
     public int clanPurgeDays() {
         return config.getInt("inactivity.clan-purge-days", 60);
+    }
+
+    public List<String> bannedWords() {
+        return config.getStringList("moderation.banned-words");
+    }
+
+    /** Segundos que um jogador precisa esperar depois de desfazer um clã antes de criar outro. */
+    public long recreateCooldownSeconds() {
+        return config.getLong("moderation.recreate-cooldown-seconds", 300);
     }
 }

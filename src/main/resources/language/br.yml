@@ -25,6 +25,8 @@ criar-nome-em-uso: '{prefix}<red>Já existe um clã usando o nome <yellow>{nome}
 criar-sem-coins: '{prefix}<red>Você precisa de <yellow>{custo}<red> para criar um clã.'
 criar-sucesso: '{prefix}<green>Clã <yellow>[{tag}] {nome}<green> criado com sucesso! Use <yellow>/clan<green> para ver o menu.'
 criacao-gui-texto-vazio: '{prefix}<red>Renomeie o item na bigorna antes de clicar no resultado.'
+moderacao-palavra-banida: '{prefix}<red>Esse texto contém uma palavra não permitida no servidor.'
+moderacao-cooldown-criar: '{prefix}<red>Espere <yellow>{segundos}s<red> antes de criar outro clã.'
 
 desfazer-confirmar: '{prefix}<yellow>Tem certeza que quer desfazer o clã <yellow>[{tag}]<yellow>? Essa ação não pode ser desfeita. Use <yellow>/clan desfazer confirmar<yellow> em até 30 segundos.'
 desfazer-sucesso: '{prefix}<green>O clã <yellow>[{tag}]<green> foi desfeito.'
