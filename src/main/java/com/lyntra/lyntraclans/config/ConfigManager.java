@@ -150,6 +150,10 @@ public final class ConfigManager {
         return config.getInt("inactivity.clan-purge-days", 60);
     }
 
+    public int inactivityCheckIntervalHours() {
+        return Math.max(1, config.getInt("inactivity.check-interval-hours", 24));
+    }
+
     public List<String> bannedWords() {
         return config.getStringList("moderation.banned-words");
     }

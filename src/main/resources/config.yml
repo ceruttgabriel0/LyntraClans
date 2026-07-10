@@ -33,7 +33,11 @@ kills:
   block-damage-allies: true
 
 inactivity:
+  # Cla sem nenhuma acao relevante (chat, kill, boletim, deposito, etc) ha mais desses dias e
+  # desfeito automaticamente. 0 ou negativo desliga a limpeza automatica.
   clan-purge-days: 60
+  # De quanto em quanto tempo (horas) o servidor verifica se tem cla inativo pra desfazer.
+  check-interval-hours: 24
 
 moderation:
   # Lista de palavras banidas em tag/nome/descricao do cla (comparacao sem acento, sem

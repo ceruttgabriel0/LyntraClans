@@ -29,6 +29,7 @@ import com.lyntra.lyntraclans.managers.BankManager;
 import com.lyntra.lyntraclans.managers.ChatModeManager;
 import com.lyntra.lyntraclans.managers.ClanChestRegistry;
 import com.lyntra.lyntraclans.managers.ClanManager;
+import com.lyntra.lyntraclans.managers.InactivityManager;
 import com.lyntra.lyntraclans.managers.InviteManager;
 import com.lyntra.lyntraclans.managers.KillManager;
 import com.lyntra.lyntraclans.managers.MemberManager;
@@ -107,6 +108,8 @@ public final class LyntraClans extends JavaPlugin implements Listener {
         ScoreboardManager scoreboardManager = new ScoreboardManager(configManager, clanManager, relationManager,
                 warManager, playerSettingsManager);
         ClanChestRegistry chestRegistry = new ClanChestRegistry();
+        InactivityManager inactivityManager = new InactivityManager(getLogger(), configManager, clanManager,
+                inviteManager, relationManager, warManager, noticeManager);
         lyntraChatHook = new LyntraChatHook(this);
         placeholderApiHook = new PlaceholderApiHook(this, clanManager, killManager, bankManager);
 
@@ -140,6 +143,19 @@ public final class LyntraClans extends JavaPlugin implements Listener {
             long intervalTicks = configManager.nametagRefreshIntervalSeconds() * 20L;
             getServer().getScheduler().runTaskTimer(this, scoreboardManager::refreshAll, intervalTicks,
                     intervalTicks);
+        }
+
+        if (configManager.clanPurgeDays() > 0) {
+            long inactivityIntervalTicks = configManager.inactivityCheckIntervalHours() * 60L * 60L * 20L;
+            // Primeira checagem logo apos o boot (nao espera o intervalo inteiro) - pega cla que
+            // ficou inativo enquanto o servidor estava desligado, em vez de so descobrir isso
+            // ate 1 intervalo inteiro depois do proximo restart.
+            getServer().getScheduler().runTaskTimer(this, () -> {
+                java.util.List<String> purged = inactivityManager.purgeInactiveClans();
+                if (!purged.isEmpty()) {
+                    getLogger().info("Clas desfeitos por inatividade: " + String.join(", ", purged));
+                }
+            }, 600L, inactivityIntervalTicks);
         }
 
         getComponentLogger().info(startupBanner());
