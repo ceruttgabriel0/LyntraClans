@@ -13,6 +13,7 @@ import com.lyntra.lyntraclans.commands.ClanServices;
 import com.lyntra.lyntraclans.config.ConfigManager;
 import com.lyntra.lyntraclans.config.LanguageManager;
 import com.lyntra.lyntraclans.gui.AnvilInputListener;
+import com.lyntra.lyntraclans.gui.ChestCloseListener;
 import com.lyntra.lyntraclans.gui.FrameListener;
 import com.lyntra.lyntraclans.gui.MainMenuFrame;
 import com.lyntra.lyntraclans.hooks.LyntraChatHook;
@@ -118,6 +119,7 @@ public final class LyntraClans extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(new FrameListener(), this);
         getServer().getPluginManager().registerEvents(new AnvilInputListener(), this);
+        getServer().getPluginManager().registerEvents(new ChestCloseListener(), this);
         getServer().getPluginManager().registerEvents(
                 new ClanChatListener(clanManager, chatModeManager, relationManager, languageManager), this);
         getServer().getPluginManager().registerEvents(new DamageListener(clanManager, killManager), this);

@@ -191,7 +191,8 @@ public final class ClanManager {
         LIDER("Líder", 40, EnumSet.allOf(ClanPermission.class), false),
         CAPITAO("Capitão", 30, EnumSet.of(ClanPermission.CONVIDAR, ClanPermission.EXPULSAR,
                 ClanPermission.PROMOVER, ClanPermission.BOLETIM, ClanPermission.BANCO_DEPOSITAR,
-                ClanPermission.BANCO_VER_SALDO, ClanPermission.GERENCIAR_ALIANCA, ClanPermission.GERENCIAR_RIVAL),
+                ClanPermission.BANCO_VER_SALDO, ClanPermission.GERENCIAR_ALIANCA, ClanPermission.GERENCIAR_RIVAL,
+                ClanPermission.ACESSAR_BAU),
                 false),
         MEMBRO("Membro", 20, EnumSet.of(ClanPermission.BANCO_DEPOSITAR, ClanPermission.BANCO_VER_SALDO), false),
         RECRUTA("Recruta", 10, EnumSet.noneOf(ClanPermission.class), true);

@@ -79,6 +79,11 @@ public final class MainMenuFrame extends AbstractFrame {
                     .name(Component.text("Minhas preferências"))
                     .lore(Component.text("Toggles, fogo amigo, chat, sair"))
                     .build());
+            inventory.setItem(24, ItemBuilder.of(Material.CHEST)
+                    .name(Component.text("Baú do clã"))
+                    .lore(Component.text(clan.getChestSize() + " slots"))
+                    .lore(Component.text("Clique para abrir"))
+                    .build());
         } else {
             inventory.setItem(11, ItemBuilder.of(Material.BOOK)
                     .name(Component.text("Criar clã"))
@@ -205,6 +210,17 @@ public final class MainMenuFrame extends AbstractFrame {
             case 22 -> clanOptional.ifPresent(clan -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new PreferencesFrame(services, clan, services.logger(), () -> open(player)).open(player);
+            });
+            case 24 -> clanOptional.ifPresent(clan -> {
+                Optional<ClanMember> member = services.clanManager().getMember(player.getUniqueId());
+                boolean canAccess = member.isPresent()
+                        && hasPermission(clan, member.get(), ClanPermission.ACESSAR_BAU);
+                if (!canAccess) {
+                    player.sendMessage(services.languageManager().get("sem-permissao-clan"));
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                new ClanChestFrame(services, clan).open(player);
             });
             case 23 -> {
                 player.closeInventory();

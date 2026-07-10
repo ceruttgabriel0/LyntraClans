@@ -70,6 +70,11 @@ public final class ConfigManager {
         return config.getInt("upgrades.chest-slot-size", 9);
     }
 
+    /** Limite de slots do baú do clã. Inventários do Bukkit só aceitam múltiplos de 9 até 54 (6 fileiras). */
+    public int chestSlotMax() {
+        return config.getInt("upgrades.chest-slot-max", 54);
+    }
+
     public int rankingUpdateIntervalMinutes() {
         return config.getInt("ranking.update-interval-minutes", 30);
     }

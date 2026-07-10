@@ -163,7 +163,8 @@ public final class ClanSettingsFrame extends AbstractFrame {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 UpgradeManager.Result result = services.upgradeManager().upgradeMemberSlot(clan);
                 feedbackUpgrade(player, result, "upgrades-membros-sucesso", "upgrades-membros-teto",
-                        services.configManager().memberSlotPrice(), String.valueOf(clan.getMaxMembers()));
+                        services.configManager().memberSlotPrice(), String.valueOf(clan.getMaxMembers()),
+                        String.valueOf(services.configManager().absoluteMaxMembers()));
                 open(player);
             }
             case 16 -> {
@@ -173,8 +174,9 @@ public final class ClanSettingsFrame extends AbstractFrame {
                 }
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 UpgradeManager.Result result = services.upgradeManager().upgradeChest(clan);
-                feedbackUpgrade(player, result, "upgrades-bau-sucesso", "erro-interno",
-                        services.configManager().chestSlotPrice(), String.valueOf(clan.getChestSize()));
+                feedbackUpgrade(player, result, "upgrades-bau-sucesso", "upgrades-bau-teto",
+                        services.configManager().chestSlotPrice(), String.valueOf(clan.getChestSize()),
+                        String.valueOf(services.configManager().chestSlotMax()));
                 open(player);
             }
             case 22 -> {
@@ -211,12 +213,11 @@ public final class ClanSettingsFrame extends AbstractFrame {
     }
 
     private void feedbackUpgrade(Player player, UpgradeManager.Result result, String successKey, String failKey,
-                                  double price, String newValue) {
+                                  double price, String newValue, String maxValue) {
         switch (result) {
             case OK -> player.sendMessage(services.languageManager().get(successKey, "novo", newValue,
                     "custo", services.bankManager().format(price)));
-            case MAX_REACHED -> player.sendMessage(services.languageManager().get(failKey,
-                    "max", String.valueOf(services.configManager().absoluteMaxMembers())));
+            case MAX_REACHED -> player.sendMessage(services.languageManager().get(failKey, "max", maxValue));
             case INSUFFICIENT_CLAN_BALANCE -> player.sendMessage(services.languageManager().get(
                     "banco-sem-saldo-clan", "quantia", services.bankManager().format(price)));
         }

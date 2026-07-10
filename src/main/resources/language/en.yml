@@ -159,6 +159,7 @@ upgrades-uso: '/clan upgrades <membros|bau>'
 upgrades-membros-teto: '{prefix}<red>The clan is already at the maximum member limit ({max}).'
 upgrades-membros-sucesso: '{prefix}<green>Member limit increased to <yellow>{novo}<green>! (cost {custo} from the clan bank)'
 upgrades-bau-sucesso: '{prefix}<green>Chest size increased to <yellow>{novo}<green> slots! (cost {custo} from the clan bank)'
+upgrades-bau-teto: '{prefix}<red>The chest is already at maximum size ({max} slots).'
 
 home-uso: '/clan home'
 home-sem-home: '{prefix}<red>Your clan has not set a home yet. Use <yellow>/clan sethome<red>.'

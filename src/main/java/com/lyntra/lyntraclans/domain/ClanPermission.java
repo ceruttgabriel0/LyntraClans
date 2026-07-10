@@ -19,5 +19,6 @@ public enum ClanPermission {
     GERENCIAR_CONFIANCA,
     GERENCIAR_GUERRA,
     GERENCIAR_FF_CLA,
-    ALTERAR_TAG
+    ALTERAR_TAG,
+    ACESSAR_BAU
 }

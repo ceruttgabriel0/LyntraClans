@@ -159,6 +159,7 @@ upgrades-uso: '/clan upgrades <membros|bau>'
 upgrades-membros-teto: '{prefix}<red>O clã já está no limite máximo de membros ({max}).'
 upgrades-membros-sucesso: '{prefix}<green>Limite de membros aumentado para <yellow>{novo}<green>! (custou {custo} do banco do clã)'
 upgrades-bau-sucesso: '{prefix}<green>Tamanho do baú aumentado para <yellow>{novo}<green> slots! (custou {custo} do banco do clã)'
+upgrades-bau-teto: '{prefix}<red>O baú já está no tamanho máximo ({max} slots).'
 
 home-uso: '/clan home'
 home-sem-home: '{prefix}<red>Seu clã ainda não definiu uma base. Use <yellow>/clan sethome<red>.'

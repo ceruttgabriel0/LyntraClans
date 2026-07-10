@@ -51,7 +51,8 @@ public final class UpgradesSubCommand extends AbstractClanSubCommand {
                             "custo", services.bankManager().format(services.configManager().chestSlotPrice()));
                     case INSUFFICIENT_CLAN_BALANCE -> msg(player, "banco-sem-saldo-clan", "quantia",
                             services.bankManager().format(services.configManager().chestSlotPrice()));
-                    case MAX_REACHED -> msg(player, "erro-interno");
+                    case MAX_REACHED -> msg(player, "upgrades-bau-teto",
+                            "max", String.valueOf(services.configManager().chestSlotMax()));
                 }
             }
             default -> usage(player, "upgrades-uso");

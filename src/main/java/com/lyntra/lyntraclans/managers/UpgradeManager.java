@@ -35,11 +35,16 @@ public final class UpgradeManager {
     }
 
     public Result upgradeChest(Clan clan) {
+        if (clan.getChestSize() >= configManager.chestSlotMax()) {
+            return Result.MAX_REACHED;
+        }
         double price = configManager.chestSlotPrice();
         if (!bankManager.debitClan(clan, price)) {
             return Result.INSUFFICIENT_CLAN_BALANCE;
         }
-        clan.setChestSize(clan.getChestSize() + configManager.chestSlotUpgradeSize());
+        int newSize = Math.min(clan.getChestSize() + configManager.chestSlotUpgradeSize(),
+                configManager.chestSlotMax());
+        clan.setChestSize(newSize);
         clanManager.persistClan(clan);
         return Result.OK;
     }

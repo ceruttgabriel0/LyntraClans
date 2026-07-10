@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public final class SchemaMigrator {
 
-    private static final int CURRENT_VERSION = 2;
+    private static final int CURRENT_VERSION = 3;
 
     private static final List<Migration> MIGRATIONS = List.of(
             new Migration() {
@@ -30,6 +30,22 @@ public final class SchemaMigrator {
                         try (Statement statement = connection.createStatement()) {
                             statement.execute(
                                     "ALTER TABLE clan_members ADD COLUMN war_bonus_weight REAL NOT NULL DEFAULT 0");
+                        }
+                    }
+                }
+            },
+            new Migration() {
+                @Override
+                public int targetVersion() {
+                    return 3;
+                }
+
+                @Override
+                public void apply(Connection connection) throws SQLException {
+                    if (!columnExists(connection, "clans", "chest_contents")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE clans ADD COLUMN chest_contents TEXT NOT NULL DEFAULT ''");
                         }
                     }
                 }

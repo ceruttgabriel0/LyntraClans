@@ -19,7 +19,8 @@ CREATE TABLE IF NOT EXISTS clans (
     founded_at INTEGER NOT NULL,
     last_used_at INTEGER NOT NULL,
     verified INTEGER NOT NULL DEFAULT 0,
-    flags TEXT NOT NULL DEFAULT ''
+    flags TEXT NOT NULL DEFAULT '',
+    chest_contents TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE IF NOT EXISTS clan_ranks (
