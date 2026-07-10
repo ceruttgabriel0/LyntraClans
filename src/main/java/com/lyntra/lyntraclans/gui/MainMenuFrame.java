@@ -63,10 +63,18 @@ public final class MainMenuFrame extends AbstractFrame {
                     .name(Component.text("Quadro de avisos"))
                     .lore(Component.text("Clique para ver os avisos"))
                     .build());
+            inventory.setItem(17, ItemBuilder.of(Material.IRON_HELMET)
+                    .name(Component.text("Cargos"))
+                    .lore(Component.text("Clique para editar cargos e permissões"))
+                    .build());
         } else {
             inventory.setItem(11, ItemBuilder.of(Material.BOOK)
                     .name(Component.text("Criar clã"))
-                    .lore(Component.text("Use /clan criar <tag> <nome>"))
+                    .lore(Component.text("Clique para criar um clã"))
+                    .build());
+            inventory.setItem(12, ItemBuilder.of(Material.PAPER)
+                    .name(Component.text("Convites recebidos"))
+                    .lore(Component.text("Clique para ver/responder convites"))
                     .build());
         }
 
@@ -103,10 +111,14 @@ public final class MainMenuFrame extends AbstractFrame {
                     new CreateClanAnvilFrame(services, services.logger()).open(player);
                 }
             }
-            case 12 -> clanOptional.ifPresent(clan -> {
+            case 12 -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
-                new MembersFrame(services, clan, () -> open(player)).open(player);
-            });
+                if (clanOptional.isPresent()) {
+                    new MembersFrame(services, clanOptional.get(), () -> open(player)).open(player);
+                } else {
+                    new InvitesFrame(services, services.logger(), () -> open(player)).open(player);
+                }
+            }
             case 13 -> clanOptional.ifPresent(clan -> {
                 if (!clan.hasHome()) {
                     player.sendMessage(services.languageManager().get("home-sem-home"));
@@ -150,6 +162,17 @@ public final class MainMenuFrame extends AbstractFrame {
                             "autor", author == null ? "?" : author, "mensagem", notice.message(),
                             "data", com.lyntra.lyntraclans.util.TimeFormat.format(notice.createdAt())));
                 });
+            });
+            case 17 -> clanOptional.ifPresent(clan -> {
+                Optional<ClanMember> member = services.clanManager().getMember(player.getUniqueId());
+                boolean canManage = member.isPresent()
+                        && hasPermission(clan, member.get(), ClanPermission.GERENCIAR_CARGOS);
+                if (!canManage) {
+                    player.sendMessage(services.languageManager().get("sem-permissao-clan"));
+                    return;
+                }
+                player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
+                new RanksFrame(services, clan, () -> open(player)).open(player);
             });
             case 20 -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);

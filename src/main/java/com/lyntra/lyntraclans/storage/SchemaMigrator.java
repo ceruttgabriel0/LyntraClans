@@ -15,9 +15,26 @@ import java.util.logging.Logger;
  */
 public final class SchemaMigrator {
 
-    private static final int CURRENT_VERSION = 1;
+    private static final int CURRENT_VERSION = 2;
 
-    private static final List<Migration> MIGRATIONS = List.of();
+    private static final List<Migration> MIGRATIONS = List.of(
+            new Migration() {
+                @Override
+                public int targetVersion() {
+                    return 2;
+                }
+
+                @Override
+                public void apply(Connection connection) throws SQLException {
+                    if (!columnExists(connection, "clan_members", "war_bonus_weight")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE clan_members ADD COLUMN war_bonus_weight REAL NOT NULL DEFAULT 0");
+                        }
+                    }
+                }
+            }
+    );
 
     private final Connection connection;
     private final Logger logger;
@@ -63,7 +80,7 @@ public final class SchemaMigrator {
         }
     }
 
-    public boolean columnExists(String table, String column) throws SQLException {
+    public static boolean columnExists(Connection connection, String table, String column) throws SQLException {
         try (Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("PRAGMA table_info(" + table + ")")) {
             while (resultSet.next()) {

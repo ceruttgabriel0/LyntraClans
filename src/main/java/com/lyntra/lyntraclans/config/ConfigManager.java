@@ -83,6 +83,11 @@ public final class ConfigManager {
         };
     }
 
+    /** Multiplicador extra aplicado ao peso do kill quando os dois clas estao em guerra ativa. */
+    public double warWeightMultiplier() {
+        return config.getDouble("kills.war-weight-multiplier", 1.5);
+    }
+
     public boolean blockDamageSameClan() {
         return config.getBoolean("kills.block-damage-same-clan", true);
     }

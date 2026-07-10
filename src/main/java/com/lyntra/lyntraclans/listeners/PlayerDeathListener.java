@@ -42,6 +42,8 @@ public final class PlayerDeathListener implements Listener {
 
         ClanMember killerMember = clanManager.getMember(killer.getUniqueId()).orElse(null);
         ClanMember member = victimMember.orElse(null);
-        killManager.registerKill(killerMember, member, category);
+        int killerClanId = killerClan.map(Clan::getId).orElse(-1);
+        int victimClanId = victimClan.map(Clan::getId).orElse(-1);
+        killManager.registerKill(killerMember, member, category, killerClanId, victimClanId);
     }
 }

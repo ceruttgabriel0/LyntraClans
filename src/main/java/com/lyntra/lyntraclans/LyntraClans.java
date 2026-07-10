@@ -93,9 +93,10 @@ public final class LyntraClans extends JavaPlugin implements Listener {
         BankManager bankManager = new BankManager(vaultHook, clanManager);
         UpgradeManager upgradeManager = new UpgradeManager(configManager, clanManager, bankManager);
         PlayerSettingsManager playerSettingsManager = new PlayerSettingsManager(getLogger(), playerDataDao);
-        KillManager killManager = new KillManager(configManager, clanManager, relationManager, playerSettingsManager);
-        ChatModeManager chatModeManager = new ChatModeManager();
         WarManager warManager = new WarManager(getLogger(), warDao);
+        KillManager killManager = new KillManager(configManager, clanManager, relationManager,
+                playerSettingsManager, warManager);
+        ChatModeManager chatModeManager = new ChatModeManager();
         NoticeManager noticeManager = new NoticeManager(getLogger(), noticeDao);
         lyntraChatHook = new LyntraChatHook(this);
         placeholderApiHook = new PlaceholderApiHook(this, clanManager, killManager, bankManager);

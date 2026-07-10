@@ -24,6 +24,9 @@ kills:
   weight-aliado: 0.0
   weight-neutro: 1.0
   weight-civil: 1.0
+  # Multiplicador extra aplicado ao peso do kill quando os dois clas estao em guerra ativa
+  # (/clan guerra iniciar). Ex: kill de rival em guerra vale weight-rival * war-weight-multiplier.
+  war-weight-multiplier: 1.5
   block-damage-same-clan: true
   block-damage-allies: true
 

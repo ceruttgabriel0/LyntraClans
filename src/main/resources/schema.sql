@@ -43,7 +43,8 @@ CREATE TABLE IF NOT EXISTS clan_members (
     kills_neutral INTEGER NOT NULL DEFAULT 0,
     kills_civil INTEGER NOT NULL DEFAULT 0,
     deaths INTEGER NOT NULL DEFAULT 0,
-    trusted INTEGER NOT NULL DEFAULT 0
+    trusted INTEGER NOT NULL DEFAULT 0,
+    war_bonus_weight REAL NOT NULL DEFAULT 0
 );
 
 CREATE TABLE IF NOT EXISTS clan_relations (

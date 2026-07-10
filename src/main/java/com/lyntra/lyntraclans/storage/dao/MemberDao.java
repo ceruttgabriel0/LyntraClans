@@ -29,7 +29,7 @@ public final class MemberDao {
             statement.setLong(4, joinedAt);
             statement.executeUpdate();
         }
-        return new ClanMember(uuid, clanId, rankId, joinedAt, 0, 0, 0, 0, 0, false);
+        return new ClanMember(uuid, clanId, rankId, joinedAt, 0, 0, 0, 0, 0, false, 0);
     }
 
     public Optional<ClanMember> findByUuid(UUID uuid) throws SQLException {
@@ -72,7 +72,7 @@ public final class MemberDao {
 
     public void update(ClanMember member) throws SQLException {
         String sql = "UPDATE clan_members SET rank_id = ?, kills_rival = ?, kills_ally = ?, kills_neutral = ?, "
-                + "kills_civil = ?, deaths = ?, trusted = ? WHERE uuid = ?";
+                + "kills_civil = ?, deaths = ?, trusted = ?, war_bonus_weight = ? WHERE uuid = ?";
         try (PreparedStatement statement = databaseManager.getConnection().prepareStatement(sql)) {
             statement.setInt(1, member.getRankId());
             statement.setInt(2, member.getKills(com.lyntra.lyntraclans.domain.KillCategory.RIVAL));
@@ -81,7 +81,8 @@ public final class MemberDao {
             statement.setInt(5, member.getKills(com.lyntra.lyntraclans.domain.KillCategory.CIVIL));
             statement.setInt(6, member.getDeaths());
             statement.setInt(7, member.isTrusted() ? 1 : 0);
-            statement.setString(8, member.getUuid().toString());
+            statement.setDouble(8, member.getWarBonusWeight());
+            statement.setString(9, member.getUuid().toString());
             statement.executeUpdate();
         }
     }
@@ -124,7 +125,8 @@ public final class MemberDao {
                 resultSet.getInt("kills_neutral"),
                 resultSet.getInt("kills_civil"),
                 resultSet.getInt("deaths"),
-                resultSet.getInt("trusted") == 1
+                resultSet.getInt("trusted") == 1,
+                resultSet.getDouble("war_bonus_weight")
         );
     }
 }

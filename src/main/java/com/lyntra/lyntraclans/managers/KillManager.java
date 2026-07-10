@@ -15,13 +15,15 @@ public final class KillManager {
     private final ClanManager clanManager;
     private final RelationManager relationManager;
     private final PlayerSettingsManager playerSettingsManager;
+    private final WarManager warManager;
 
     public KillManager(ConfigManager configManager, ClanManager clanManager, RelationManager relationManager,
-                        PlayerSettingsManager playerSettingsManager) {
+                        PlayerSettingsManager playerSettingsManager, WarManager warManager) {
         this.configManager = configManager;
         this.clanManager = clanManager;
         this.relationManager = relationManager;
         this.playerSettingsManager = playerSettingsManager;
+        this.warManager = warManager;
     }
 
     public KillCategory categorize(Clan killerClan, Clan victimClan) {
@@ -41,8 +43,22 @@ public final class KillManager {
     }
 
     public void registerKill(ClanMember killer, ClanMember victim, KillCategory category) {
+        registerKill(killer, victim, category, -1, -1);
+    }
+
+    /**
+     * killerClanId/victimClanId servem so pra checar se os dois clas estao em guerra ativa e aplicar
+     * o multiplicador extra de peso (ver {@link ConfigManager#warWeightMultiplier()}). Passe -1 quando
+     * um dos dois lados nao tem cla (kill Civil), a guerra nunca se aplica nesse caso.
+     */
+    public void registerKill(ClanMember killer, ClanMember victim, KillCategory category, int killerClanId,
+                              int victimClanId) {
         if (killer != null) {
             killer.addKill(category);
+            if (killerClanId != -1 && victimClanId != -1 && warManager.isAtWar(killerClanId, victimClanId)) {
+                double bonus = configManager.killWeight(category) * (configManager.warWeightMultiplier() - 1);
+                killer.addWarBonus(bonus);
+            }
             clanManager.persistMember(killer);
         }
         if (victim != null) {

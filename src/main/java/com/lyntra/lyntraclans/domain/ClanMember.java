@@ -14,9 +14,10 @@ public final class ClanMember {
     private int killsCivil;
     private int deaths;
     private boolean trusted;
+    private double warBonusWeight;
 
     public ClanMember(UUID uuid, int clanId, int rankId, long joinedAt, int killsRival, int killsAlly,
-                       int killsNeutral, int killsCivil, int deaths, boolean trusted) {
+                       int killsNeutral, int killsCivil, int deaths, boolean trusted, double warBonusWeight) {
         this.uuid = uuid;
         this.clanId = clanId;
         this.rankId = rankId;
@@ -27,6 +28,7 @@ public final class ClanMember {
         this.killsCivil = killsCivil;
         this.deaths = deaths;
         this.trusted = trusted;
+        this.warBonusWeight = warBonusWeight;
     }
 
     public UUID getUuid() {
@@ -81,8 +83,17 @@ public final class ClanMember {
 
     public double getWeightedKdr(double weightRival, double weightAlly, double weightNeutral, double weightCivil) {
         double weighted = killsRival * weightRival + killsAlly * weightAlly
-                + killsNeutral * weightNeutral + killsCivil * weightCivil;
+                + killsNeutral * weightNeutral + killsCivil * weightCivil + warBonusWeight;
         return deaths == 0 ? weighted : weighted / deaths;
+    }
+
+    public double getWarBonusWeight() {
+        return warBonusWeight;
+    }
+
+    /** Peso extra creditado quando um kill acontece entre clas em guerra ativa (ver KillManager). */
+    public void addWarBonus(double bonus) {
+        this.warBonusWeight += bonus;
     }
 
     public boolean isTrusted() {
