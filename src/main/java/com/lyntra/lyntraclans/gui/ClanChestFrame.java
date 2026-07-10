@@ -28,11 +28,13 @@ public final class ClanChestFrame implements InventoryHolder, EditableInventory 
     }
 
     public void open(Player player) {
-        int size = roundedSize(clan.getChestSize());
-        inventory = Bukkit.createInventory(this, size,
-                miniMessage.deserialize("<dark_gray>Baú - [" + clan.getTag() + "]"));
-        ItemStack[] contents = ClanChestSerializer.deserialize(clan.getChestContents(), size);
-        inventory.setContents(contents);
+        inventory = services.chestRegistry().getOrCreate(clan.getId(), () -> {
+            int size = roundedSize(clan.getChestSize());
+            Inventory fresh = Bukkit.createInventory(this, size,
+                    miniMessage.deserialize("<dark_gray>Baú - [" + clan.getTag() + "]"));
+            fresh.setContents(ClanChestSerializer.deserialize(clan.getChestContents(), size));
+            return fresh;
+        });
         player.openInventory(inventory);
     }
 
@@ -51,5 +53,6 @@ public final class ClanChestFrame implements InventoryHolder, EditableInventory 
         String serialized = ClanChestSerializer.serialize(closedInventory.getContents());
         clan.setChestContents(serialized);
         services.clanManager().persistClan(clan);
+        services.chestRegistry().evictIfEmpty(clan.getId(), closedInventory);
     }
 }

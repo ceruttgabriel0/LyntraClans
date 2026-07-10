@@ -7,6 +7,7 @@ import com.lyntra.lyntraclans.hooks.VaultHook;
 import com.lyntra.lyntraclans.managers.AntiAbuseManager;
 import com.lyntra.lyntraclans.managers.BankManager;
 import com.lyntra.lyntraclans.managers.ChatModeManager;
+import com.lyntra.lyntraclans.managers.ClanChestRegistry;
 import com.lyntra.lyntraclans.managers.ClanManager;
 import com.lyntra.lyntraclans.managers.InviteManager;
 import com.lyntra.lyntraclans.managers.KillManager;
@@ -42,6 +43,7 @@ public record ClanServices(
         PlayerDataDao playerDataDao,
         Logger logger,
         AntiAbuseManager antiAbuseManager,
-        ScoreboardManager scoreboardManager
+        ScoreboardManager scoreboardManager,
+        ClanChestRegistry chestRegistry
 ) {
 }

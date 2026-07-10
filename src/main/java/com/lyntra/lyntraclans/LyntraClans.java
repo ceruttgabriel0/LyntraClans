@@ -27,6 +27,7 @@ import com.lyntra.lyntraclans.listeners.ScoreboardListener;
 import com.lyntra.lyntraclans.managers.AntiAbuseManager;
 import com.lyntra.lyntraclans.managers.BankManager;
 import com.lyntra.lyntraclans.managers.ChatModeManager;
+import com.lyntra.lyntraclans.managers.ClanChestRegistry;
 import com.lyntra.lyntraclans.managers.ClanManager;
 import com.lyntra.lyntraclans.managers.InviteManager;
 import com.lyntra.lyntraclans.managers.KillManager;
@@ -105,6 +106,7 @@ public final class LyntraClans extends JavaPlugin implements Listener {
         AntiAbuseManager antiAbuseManager = new AntiAbuseManager();
         ScoreboardManager scoreboardManager = new ScoreboardManager(configManager, clanManager, relationManager,
                 warManager, playerSettingsManager);
+        ClanChestRegistry chestRegistry = new ClanChestRegistry();
         lyntraChatHook = new LyntraChatHook(this);
         placeholderApiHook = new PlaceholderApiHook(this, clanManager, killManager, bankManager);
 
@@ -115,7 +117,7 @@ public final class LyntraClans extends JavaPlugin implements Listener {
         ClanServices services = new ClanServices(languageManager, configManager, clanManager, rankManager,
                 memberManager, inviteManager, relationManager, bankManager, upgradeManager, killManager,
                 chatModeManager, vaultHook, lyntraChatHook, warManager, noticeManager, playerSettingsManager,
-                playerDataDao, getLogger(), antiAbuseManager, scoreboardManager);
+                playerDataDao, getLogger(), antiAbuseManager, scoreboardManager, chestRegistry);
 
         MainMenuFrame mainMenuFrame = new MainMenuFrame(services);
         ClanCommand clanCommand = new ClanCommand(services, mainMenuFrame, getLogger());
