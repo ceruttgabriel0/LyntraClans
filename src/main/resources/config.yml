@@ -43,3 +43,11 @@ moderation:
   # Tempo de espera (segundos) depois de desfazer um clã antes de poder criar outro,
   # evita o ciclo criar/desfazer repetido pra farmar nome/tag.
   recreate-cooldown-seconds: 300
+
+leveling:
+  # XP ganho pelo cla a cada ponto de peso de kill (kill de rival com peso 3.0 da 3.0 * isto de XP).
+  xp-per-weighted-kill: 10.0
+  # Custo linear de XP por nivel: nivel 2 custa isto, nivel 3 custa o dobro, etc.
+  xp-per-level: 200
+  # Slots de membro extra GRATIS (sem custar do banco) que o cla ganha a cada nivel subido.
+  member-bonus-per-level: 1

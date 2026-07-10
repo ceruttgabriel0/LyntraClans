@@ -55,6 +55,9 @@ public final class ClanInfoFrame extends AbstractFrame {
                         "total", String.valueOf(members.size())))
                 .lore(services.languageManager().get("info-kdr", "kdr",
                         String.format("%.2f", services.killManager().clanWeightedKdr(clan))))
+                .lore(services.languageManager().get("info-nivel", "nivel", String.valueOf(clan.getLevel()),
+                        "xp", String.valueOf(clan.getXp() % Math.max(1, services.configManager().xpPerLevel())),
+                        "proximo", String.valueOf(Math.max(1, services.configManager().xpPerLevel()))))
                 .lore(services.languageManager().get("info-kills",
                         "rival", String.valueOf(services.killManager().clanKills(clan, KillCategory.RIVAL)),
                         "aliado", String.valueOf(services.killManager().clanKills(clan, KillCategory.ALIADO)),

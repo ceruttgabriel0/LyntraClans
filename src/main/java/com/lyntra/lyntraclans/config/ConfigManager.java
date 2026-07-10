@@ -158,4 +158,19 @@ public final class ConfigManager {
     public long recreateCooldownSeconds() {
         return config.getLong("moderation.recreate-cooldown-seconds", 300);
     }
+
+    /** Quanto XP o clã ganha por ponto de peso de kill (já considerando categoria + bônus de guerra). */
+    public double xpPerWeightedKill() {
+        return config.getDouble("leveling.xp-per-weighted-kill", 10.0);
+    }
+
+    /** XP necessário por nível, custo linear simples (nível 2 custa isso, nível 3 o dobro, etc). */
+    public long xpPerLevel() {
+        return config.getLong("leveling.xp-per-level", 200);
+    }
+
+    /** Quantos slots de membro extra (grátis, sem custar do banco) o clã ganha a cada nível. */
+    public int memberBonusPerLevel() {
+        return config.getInt("leveling.member-bonus-per-level", 1);
+    }
 }

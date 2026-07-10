@@ -62,6 +62,10 @@ public final class InfoSubCommand extends AbstractClanSubCommand {
                 "total", String.valueOf(members.size())));
         player.sendMessage(services.languageManager().get("info-kdr", "kdr",
                 String.format("%.2f", services.killManager().clanWeightedKdr(clan))));
+        long xpPerLevel = Math.max(1, services.configManager().xpPerLevel());
+        long xpIntoLevel = clan.getXp() % xpPerLevel;
+        player.sendMessage(services.languageManager().get("info-nivel", "nivel", String.valueOf(clan.getLevel()),
+                "xp", String.valueOf(xpIntoLevel), "proximo", String.valueOf(xpPerLevel)));
         player.sendMessage(services.languageManager().get("info-kills",
                 "rival", String.valueOf(services.killManager().clanKills(clan, KillCategory.RIVAL)),
                 "aliado", String.valueOf(services.killManager().clanKills(clan, KillCategory.ALIADO)),

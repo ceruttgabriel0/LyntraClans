@@ -36,7 +36,7 @@ public final class ClanDao {
             try (ResultSet keys = statement.getGeneratedKeys()) {
                 keys.next();
                 int id = keys.getInt(1);
-                return mapClan(id, tag, name, color, "", 0, 0, false, false, 10, 9, now, now, false, "");
+                return mapClan(id, tag, name, color, "", 0, 0, false, false, 10, 9, now, now, false, "", 0, 1);
             }
         }
     }
@@ -96,7 +96,7 @@ public final class ClanDao {
         String sql = "UPDATE clans SET tag = ?, name = ?, color = ?, description = ?, balance = ?, fee = ?, "
                 + "fee_enabled = ?, friendly_fire = ?, max_members = ?, chest_size = ?, home_world = ?, home_x = ?, "
                 + "home_y = ?, home_z = ?, home_yaw = ?, home_pitch = ?, last_used_at = ?, verified = ?, "
-                + "chest_contents = ? WHERE id = ?";
+                + "chest_contents = ?, xp = ?, level = ? WHERE id = ?";
         try (PreparedStatement statement = databaseManager.getConnection().prepareStatement(sql)) {
             statement.setString(1, clan.getTag());
             statement.setString(2, clan.getName());
@@ -126,7 +126,9 @@ public final class ClanDao {
             statement.setLong(17, clan.getLastUsedAt());
             statement.setInt(18, clan.isVerified() ? 1 : 0);
             statement.setString(19, clan.getChestContents());
-            statement.setInt(20, clan.getId());
+            statement.setLong(20, clan.getXp());
+            statement.setInt(21, clan.getLevel());
+            statement.setInt(22, clan.getId());
             statement.executeUpdate();
         }
     }
@@ -155,7 +157,9 @@ public final class ClanDao {
                 resultSet.getLong("founded_at"),
                 resultSet.getLong("last_used_at"),
                 resultSet.getInt("verified") == 1,
-                resultSet.getString("chest_contents")
+                resultSet.getString("chest_contents"),
+                resultSet.getLong("xp"),
+                resultSet.getInt("level")
         );
         String homeWorld = resultSet.getString("home_world");
         if (homeWorld != null) {
@@ -167,8 +171,9 @@ public final class ClanDao {
 
     private Clan mapClan(int id, String tag, String name, String color, String description, double balance,
                           double fee, boolean feeEnabled, boolean friendlyFire, int maxMembers, int chestSize,
-                          long foundedAt, long lastUsedAt, boolean verified, String chestContents) {
+                          long foundedAt, long lastUsedAt, boolean verified, String chestContents, long xp,
+                          int level) {
         return new Clan(id, tag, name, color, description, balance, fee, feeEnabled, friendlyFire, maxMembers,
-                chestSize, foundedAt, lastUsedAt, verified, chestContents);
+                chestSize, foundedAt, lastUsedAt, verified, chestContents, xp, level);
     }
 }

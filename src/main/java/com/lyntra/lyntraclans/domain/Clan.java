@@ -26,11 +26,13 @@ public final class Clan {
     private long lastUsedAt;
     private boolean verified;
     private String chestContents;
+    private long xp;
+    private int level;
     private final List<Rank> ranks = new ArrayList<>();
 
     public Clan(int id, String tag, String name, String color, String description, double balance, double fee,
                 boolean feeEnabled, boolean friendlyFire, int maxMembers, int chestSize, long foundedAt,
-                long lastUsedAt, boolean verified, String chestContents) {
+                long lastUsedAt, boolean verified, String chestContents, long xp, int level) {
         this.id = id;
         this.tag = tag;
         this.name = name;
@@ -46,6 +48,8 @@ public final class Clan {
         this.lastUsedAt = lastUsedAt;
         this.verified = verified;
         this.chestContents = chestContents == null ? "" : chestContents;
+        this.xp = xp;
+        this.level = Math.max(1, level);
     }
 
     public int getId() {
@@ -195,6 +199,22 @@ public final class Clan {
 
     public void setChestContents(String chestContents) {
         this.chestContents = chestContents == null ? "" : chestContents;
+    }
+
+    public long getXp() {
+        return xp;
+    }
+
+    public void setXp(long xp) {
+        this.xp = xp;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = Math.max(1, level);
     }
 
     public List<Rank> getRanks() {

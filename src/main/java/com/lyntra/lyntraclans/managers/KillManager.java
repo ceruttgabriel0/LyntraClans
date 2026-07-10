@@ -1,10 +1,13 @@
 package com.lyntra.lyntraclans.managers;
 
 import com.lyntra.lyntraclans.config.ConfigManager;
+import com.lyntra.lyntraclans.config.LanguageManager;
 import com.lyntra.lyntraclans.domain.Clan;
 import com.lyntra.lyntraclans.domain.ClanMember;
 import com.lyntra.lyntraclans.domain.FfMode;
 import com.lyntra.lyntraclans.domain.KillCategory;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,14 +19,17 @@ public final class KillManager {
     private final RelationManager relationManager;
     private final PlayerSettingsManager playerSettingsManager;
     private final WarManager warManager;
+    private final LanguageManager languageManager;
 
     public KillManager(ConfigManager configManager, ClanManager clanManager, RelationManager relationManager,
-                        PlayerSettingsManager playerSettingsManager, WarManager warManager) {
+                        PlayerSettingsManager playerSettingsManager, WarManager warManager,
+                        LanguageManager languageManager) {
         this.configManager = configManager;
         this.clanManager = clanManager;
         this.relationManager = relationManager;
         this.playerSettingsManager = playerSettingsManager;
         this.warManager = warManager;
+        this.languageManager = languageManager;
     }
 
     public KillCategory categorize(Clan killerClan, Clan victimClan) {
@@ -53,17 +59,60 @@ public final class KillManager {
      */
     public void registerKill(ClanMember killer, ClanMember victim, KillCategory category, int killerClanId,
                               int victimClanId) {
+        double weightedValue = 0;
         if (killer != null) {
             killer.addKill(category);
+            weightedValue = configManager.killWeight(category);
             if (killerClanId != -1 && victimClanId != -1 && warManager.isAtWar(killerClanId, victimClanId)) {
                 double bonus = configManager.killWeight(category) * (configManager.warWeightMultiplier() - 1);
                 killer.addWarBonus(bonus);
+                weightedValue += bonus;
             }
             clanManager.persistMember(killer);
         }
         if (victim != null) {
             victim.addDeath();
             clanManager.persistMember(victim);
+        }
+        if (killerClanId != -1 && weightedValue > 0) {
+            awardXp(killerClanId, weightedValue);
+        }
+    }
+
+    /**
+     * XP e nivel do cla: formula linear simples (nivel N precisa de (N-1)*xp-per-level de XP
+     * acumulado). Cada nivel subido da um bonus fixo de slots de membro GRATIS (nao mexe no
+     * teto pago via upgrade, so soma em cima). Ve {@link ConfigManager#xpPerLevel()}.
+     */
+    private void awardXp(int clanId, double weightedValue) {
+        Optional<Clan> clanOptional = clanManager.getClanById(clanId);
+        if (clanOptional.isEmpty()) {
+            return;
+        }
+        Clan clan = clanOptional.get();
+        long xpGained = Math.round(weightedValue * configManager.xpPerWeightedKill());
+        if (xpGained <= 0) {
+            return;
+        }
+        clan.setXp(clan.getXp() + xpGained);
+        long xpPerLevel = Math.max(1, configManager.xpPerLevel());
+        int newLevel = 1 + (int) (clan.getXp() / xpPerLevel);
+        int oldLevel = clan.getLevel();
+        if (newLevel > oldLevel) {
+            int levelsGained = newLevel - oldLevel;
+            clan.setLevel(newLevel);
+            clan.setMaxMembers(clan.getMaxMembers() + levelsGained * configManager.memberBonusPerLevel());
+            broadcastLevelUp(clan, newLevel);
+        }
+        clanManager.persistClan(clan);
+    }
+
+    private void broadcastLevelUp(Clan clan, int newLevel) {
+        for (ClanMember member : clanManager.getMembers(clan.getId())) {
+            Player online = Bukkit.getPlayer(member.getUuid());
+            if (online != null) {
+                online.sendMessage(languageManager.get("clan-subiu-nivel", "nivel", String.valueOf(newLevel)));
+            }
         }
     }
 

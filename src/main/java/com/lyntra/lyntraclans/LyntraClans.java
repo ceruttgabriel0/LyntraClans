@@ -97,7 +97,7 @@ public final class LyntraClans extends JavaPlugin implements Listener {
         PlayerSettingsManager playerSettingsManager = new PlayerSettingsManager(getLogger(), playerDataDao);
         WarManager warManager = new WarManager(getLogger(), warDao);
         KillManager killManager = new KillManager(configManager, clanManager, relationManager,
-                playerSettingsManager, warManager);
+                playerSettingsManager, warManager, languageManager);
         ChatModeManager chatModeManager = new ChatModeManager();
         NoticeManager noticeManager = new NoticeManager(getLogger(), noticeDao);
         AntiAbuseManager antiAbuseManager = new AntiAbuseManager();
