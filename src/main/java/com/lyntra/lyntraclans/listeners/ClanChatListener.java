@@ -3,6 +3,7 @@ package com.lyntra.lyntraclans.listeners;
 import com.lyntra.lyntraclans.config.LanguageManager;
 import com.lyntra.lyntraclans.domain.Clan;
 import com.lyntra.lyntraclans.domain.ClanMember;
+import com.lyntra.lyntraclans.domain.Rank;
 import com.lyntra.lyntraclans.managers.ChatModeManager;
 import com.lyntra.lyntraclans.managers.ClanManager;
 import com.lyntra.lyntraclans.managers.RelationManager;
@@ -53,12 +54,25 @@ public final class ClanChatListener implements Listener {
                 ? clanRecipients(clan)
                 : allianceRecipients(clan);
 
+        String cargo = resolveRankDisplayName(clan, player);
+        String cor = clan.getColor() == null || clan.getColor().isBlank() ? "white" : clan.getColor().toLowerCase();
+
         String tagKey = mode == ChatModeManager.Mode.CLAN ? "clan-chat-formato" : "alianca-chat-formato";
-        Component formatted = miniMessage.deserialize(languageManager.raw(tagKey, "tag", clan.getTag(),
-                "jogador", player.getName(), "mensagem", escapeMiniMessage(message)));
+        Component formatted = miniMessage.deserialize(languageManager.raw(tagKey, "tag", clan.getTag(), "cor", cor,
+                "cargo", escapeMiniMessage(cargo), "jogador", player.getName(),
+                "mensagem", escapeMiniMessage(message)));
         for (Player recipient : recipients) {
             recipient.sendMessage(formatted);
         }
+    }
+
+    private String resolveRankDisplayName(Clan clan, Player player) {
+        Optional<ClanMember> memberOptional = clanManager.getMember(player.getUniqueId());
+        if (memberOptional.isEmpty()) {
+            return "";
+        }
+        Rank rank = clan.getRankById(memberOptional.get().getRankId());
+        return rank == null ? "" : rank.getDisplayName();
     }
 
     private List<Player> clanRecipients(Clan clan) {
