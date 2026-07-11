@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public final class SchemaMigrator {
 
-    private static final int CURRENT_VERSION = 5;
+    private static final int CURRENT_VERSION = 6;
 
     private static final List<Migration> MIGRATIONS = List.of(
             new Migration() {
@@ -85,6 +85,51 @@ public final class SchemaMigrator {
                         }
                     }
                 }
+            },
+            new Migration() {
+                @Override
+                public int targetVersion() {
+                    return 6;
+                }
+
+                @Override
+                public void apply(Connection connection) throws SQLException {
+                    if (!columnExists(connection, "clan_ranks", "display_name")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute("ALTER TABLE clan_ranks ADD COLUMN display_name TEXT");
+                        }
+                    }
+                    if (!columnExists(connection, "clan_members", "trusted")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE clan_members ADD COLUMN trusted INTEGER NOT NULL DEFAULT 0");
+                        }
+                    }
+                    if (!columnExists(connection, "player_data", "allow_invites")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE player_data ADD COLUMN allow_invites INTEGER NOT NULL DEFAULT 1");
+                        }
+                    }
+                    if (!columnExists(connection, "player_data", "show_warnings")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE player_data ADD COLUMN show_warnings INTEGER NOT NULL DEFAULT 1");
+                        }
+                    }
+                    if (!columnExists(connection, "player_data", "show_tag")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE player_data ADD COLUMN show_tag INTEGER NOT NULL DEFAULT 1");
+                        }
+                    }
+                    if (!columnExists(connection, "player_data", "ff_mode")) {
+                        try (Statement statement = connection.createStatement()) {
+                            statement.execute(
+                                    "ALTER TABLE player_data ADD COLUMN ff_mode TEXT NOT NULL DEFAULT 'AUTO'");
+                        }
+                    }
+                }
             }
     );
 
@@ -101,10 +146,6 @@ public final class SchemaMigrator {
             statement.execute("CREATE TABLE IF NOT EXISTS schema_version (version INTEGER NOT NULL)");
         }
         int version = readVersion();
-        if (version == 0) {
-            writeVersion(CURRENT_VERSION);
-            return;
-        }
         for (Migration migration : MIGRATIONS) {
             if (migration.targetVersion() > version) {
                 logger.info("Aplicando migracao de schema para versao " + migration.targetVersion() + "...");
