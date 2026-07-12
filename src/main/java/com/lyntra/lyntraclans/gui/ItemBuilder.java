@@ -35,6 +35,13 @@ public final class ItemBuilder {
         return builder;
     }
 
+    /** Item de preenchimento decorativo (borda), sem nome, sem ação. */
+    public static ItemStack filler() {
+        ItemBuilder builder = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE);
+        builder.name(Component.text(" "));
+        return builder.build();
+    }
+
     /** Bandeira colorida representando um clã, usando a cor configurada do clã. */
     public static ItemBuilder clanBanner(String clanColorName) {
         DyeColor dyeColor = mapToDyeColor(clanColorName);

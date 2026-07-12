@@ -28,98 +28,127 @@ public final class MainMenuFrame extends AbstractFrame {
         return Bukkit.createInventory(this, 36, miniMessage.deserialize("<dark_gray>Clãs"));
     }
 
+    // Layout: linha 0 e linha 3 sao so borda. Linha 1 = identidade/pessoal. Linha 2 = gestao/info.
+    // Slot 31 (centro da linha 3) = ajuda. Ver handleClick() para o mapeamento de acao por slot.
+    private static final int SLOT_PERFIL = 10;
+    private static final int SLOT_CLA_OU_CRIAR = 11;
+    private static final int SLOT_MEMBROS_OU_CONVITES = 12;
+    private static final int SLOT_BASE = 13;
+    private static final int SLOT_CONVIDAR = 14;
+    private static final int SLOT_BANCO = 15;
+    private static final int SLOT_AVISOS = 16;
+    private static final int SLOT_CARGOS = 19;
+    private static final int SLOT_DIPLOMACIA = 20;
+    private static final int SLOT_CONFIGURACOES = 21;
+    private static final int SLOT_PREFERENCIAS = 22;
+    private static final int SLOT_BAU = 23;
+    private static final int SLOT_RANKING = 24;
+    private static final int SLOT_LISTA = 25;
+    private static final int SLOT_AJUDA = 31;
+
     @Override
     protected void populate(Player player, Inventory inventory) {
+        fillBorder(inventory);
         Optional<Clan> clanOptional = services.clanManager().getClanOfPlayer(player.getUniqueId());
 
-        inventory.setItem(10, ItemBuilder.playerHead(player)
+        inventory.setItem(SLOT_PERFIL, ItemBuilder.playerHead(player)
                 .name(Component.text("Meu perfil"))
                 .lore(Component.text("Clique para ver seu perfil"))
                 .build());
 
         if (clanOptional.isPresent()) {
             Clan clan = clanOptional.get();
-            inventory.setItem(11, ItemBuilder.clanBanner(clan.getColor())
+            inventory.setItem(SLOT_CLA_OU_CRIAR, ItemBuilder.clanBanner(clan.getColor())
                     .name(Component.text("[" + clan.getTag() + "] " + clan.getName()))
                     .lore(Component.text("Clique para ver as informações do seu clã"))
                     .build());
-            inventory.setItem(12, ItemBuilder.of(Material.ARMOR_STAND)
+            inventory.setItem(SLOT_MEMBROS_OU_CONVITES, ItemBuilder.of(Material.ARMOR_STAND)
                     .name(Component.text("Membros"))
                     .lore(Component.text("Clique para ver/gerenciar os membros"))
                     .build());
-            inventory.setItem(13, ItemBuilder.of(Material.RED_BED)
+            inventory.setItem(SLOT_BASE, ItemBuilder.of(Material.RED_BED)
                     .name(Component.text("Base do clã"))
                     .lore(Component.text("Clique para teleportar"))
                     .build());
-            inventory.setItem(14, ItemBuilder.of(Material.PAPER)
+            inventory.setItem(SLOT_CONVIDAR, ItemBuilder.of(Material.PAPER)
                     .name(Component.text("Convidar jogador"))
                     .lore(Component.text("Clique para escolher quem convidar"))
                     .build());
-            inventory.setItem(15, ItemBuilder.of(Material.GOLD_INGOT)
+            inventory.setItem(SLOT_BANCO, ItemBuilder.of(Material.GOLD_INGOT)
                     .name(Component.text("Banco do clã"))
                     .lore(Component.text("Saldo: " + services.bankManager().format(clan.getBalance())))
                     .build());
-            inventory.setItem(16, ItemBuilder.of(Material.BELL)
+            inventory.setItem(SLOT_AVISOS, ItemBuilder.of(Material.BELL)
                     .name(Component.text("Quadro de avisos"))
                     .lore(Component.text("Clique para ver os avisos"))
                     .build());
-            inventory.setItem(17, ItemBuilder.of(Material.IRON_HELMET)
+            inventory.setItem(SLOT_CARGOS, ItemBuilder.of(Material.IRON_HELMET)
                     .name(Component.text("Cargos"))
                     .lore(Component.text("Clique para editar cargos e permissões"))
                     .build());
-            inventory.setItem(18, ItemBuilder.of(Material.SHIELD)
+            inventory.setItem(SLOT_DIPLOMACIA, ItemBuilder.of(Material.SHIELD)
                     .name(Component.text("Diplomacia"))
                     .lore(Component.text("Aliados, rivais e guerra"))
                     .build());
-            inventory.setItem(19, ItemBuilder.of(Material.COMPARATOR)
+            inventory.setItem(SLOT_CONFIGURACOES, ItemBuilder.of(Material.COMPARATOR)
                     .name(Component.text("Configurações do clã"))
                     .lore(Component.text("Cor, tag, descrição, upgrades, desfazer"))
                     .build());
-            inventory.setItem(22, ItemBuilder.of(Material.CLOCK)
+            inventory.setItem(SLOT_PREFERENCIAS, ItemBuilder.of(Material.CLOCK)
                     .name(Component.text("Minhas preferências"))
                     .lore(Component.text("Toggles, fogo amigo, chat, sair"))
                     .build());
-            inventory.setItem(24, ItemBuilder.of(Material.CHEST)
+            inventory.setItem(SLOT_BAU, ItemBuilder.of(Material.CHEST)
                     .name(Component.text("Baú do clã"))
                     .lore(Component.text(clan.getChestSize() + " slots"))
                     .lore(Component.text("Clique para abrir"))
                     .build());
         } else {
-            inventory.setItem(11, ItemBuilder.of(Material.BOOK)
+            inventory.setItem(SLOT_CLA_OU_CRIAR, ItemBuilder.of(Material.BOOK)
                     .name(Component.text("Criar clã"))
                     .lore(Component.text("Clique para criar um clã"))
                     .build());
-            inventory.setItem(12, ItemBuilder.of(Material.PAPER)
+            inventory.setItem(SLOT_MEMBROS_OU_CONVITES, ItemBuilder.of(Material.PAPER)
                     .name(Component.text("Convites recebidos"))
                     .lore(Component.text("Clique para ver/responder convites"))
                     .build());
         }
 
-        inventory.setItem(20, ItemBuilder.of(Material.ITEM_FRAME)
+        inventory.setItem(SLOT_RANKING, ItemBuilder.of(Material.ITEM_FRAME)
                 .name(Component.text("Ranking"))
                 .lore(Component.text("Clique para ver o ranking de clãs"))
                 .build());
 
-        inventory.setItem(21, ItemBuilder.of(Material.WHITE_BANNER)
+        inventory.setItem(SLOT_LISTA, ItemBuilder.of(Material.WHITE_BANNER)
                 .name(Component.text("Lista de Clãs"))
                 .lore(Component.text("Clique para ver todos os clãs"))
                 .build());
 
-        inventory.setItem(23, ItemBuilder.of(Material.WRITABLE_BOOK)
+        inventory.setItem(SLOT_AJUDA, ItemBuilder.of(Material.WRITABLE_BOOK)
                 .name(Component.text("Ajuda"))
                 .lore(Component.text("Clique para ver todos os comandos"))
                 .build());
+    }
+
+    private void fillBorder(Inventory inventory) {
+        java.util.Set<Integer> border = java.util.Set.of(
+                0, 1, 2, 3, 4, 5, 6, 7, 8,
+                9, 17, 18, 26,
+                27, 28, 29, 30, 32, 33, 34, 35);
+        for (int slot : border) {
+            inventory.setItem(slot, ItemBuilder.filler());
+        }
     }
 
     @Override
     public void handleClick(Player player, int slot) {
         Optional<Clan> clanOptional = services.clanManager().getClanOfPlayer(player.getUniqueId());
         switch (slot) {
-            case 10 -> {
+            case SLOT_PERFIL -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new ProfileFrame(services, player, () -> open(player)).open(player);
             }
-            case 11 -> {
+            case SLOT_CLA_OU_CRIAR -> {
                 if (clanOptional.isPresent()) {
                     player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                     new ClanInfoFrame(services, clanOptional.get(), () -> open(player)).open(player);
@@ -128,7 +157,7 @@ public final class MainMenuFrame extends AbstractFrame {
                     new CreateClanAnvilFrame(services, services.logger()).open(player);
                 }
             }
-            case 12 -> {
+            case SLOT_MEMBROS_OU_CONVITES -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 if (clanOptional.isPresent()) {
                     new MembersFrame(services, clanOptional.get(), () -> open(player)).open(player);
@@ -136,7 +165,7 @@ public final class MainMenuFrame extends AbstractFrame {
                     new InvitesFrame(services, services.logger(), () -> open(player)).open(player);
                 }
             }
-            case 13 -> clanOptional.ifPresent(clan -> {
+            case SLOT_BASE -> clanOptional.ifPresent(clan -> {
                 if (!clan.hasHome()) {
                     player.sendMessage(services.languageManager().get("home-sem-home"));
                     return;
@@ -151,7 +180,7 @@ public final class MainMenuFrame extends AbstractFrame {
                         clan.getHomeYaw(), clan.getHomePitch()));
                 player.sendMessage(services.languageManager().get("home-teleportado"));
             });
-            case 14 -> clanOptional.ifPresent(clan -> {
+            case SLOT_CONVIDAR -> clanOptional.ifPresent(clan -> {
                 Optional<ClanMember> member = services.clanManager().getMember(player.getUniqueId());
                 boolean canInvite = member.isPresent() && hasPermission(clan, member.get(), ClanPermission.CONVIDAR);
                 if (!canInvite) {
@@ -161,11 +190,11 @@ public final class MainMenuFrame extends AbstractFrame {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new InvitePickerFrame(services, clan, () -> open(player)).open(player);
             });
-            case 15 -> clanOptional.ifPresent(clan -> {
+            case SLOT_BANCO -> clanOptional.ifPresent(clan -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new BankFrame(services, clan, () -> open(player)).open(player);
             });
-            case 16 -> clanOptional.ifPresent(clan -> {
+            case SLOT_AVISOS -> clanOptional.ifPresent(clan -> {
                 player.closeInventory();
                 var notices = services.noticeManager().getNotices(clan.getId());
                 if (notices.isEmpty()) {
@@ -180,7 +209,7 @@ public final class MainMenuFrame extends AbstractFrame {
                             "data", com.lyntra.lyntraclans.util.TimeFormat.format(notice.createdAt())));
                 });
             });
-            case 17 -> clanOptional.ifPresent(clan -> {
+            case SLOT_CARGOS -> clanOptional.ifPresent(clan -> {
                 Optional<ClanMember> member = services.clanManager().getMember(player.getUniqueId());
                 boolean canManage = member.isPresent()
                         && hasPermission(clan, member.get(), ClanPermission.GERENCIAR_CARGOS);
@@ -191,27 +220,27 @@ public final class MainMenuFrame extends AbstractFrame {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new RanksFrame(services, clan, () -> open(player)).open(player);
             });
-            case 18 -> clanOptional.ifPresent(clan -> {
+            case SLOT_DIPLOMACIA -> clanOptional.ifPresent(clan -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new DiplomacyFrame(services, clan, services.logger(), () -> open(player)).open(player);
             });
-            case 19 -> clanOptional.ifPresent(clan -> {
+            case SLOT_CONFIGURACOES -> clanOptional.ifPresent(clan -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new ClanSettingsFrame(services, clan, services.logger(), () -> open(player)).open(player);
             });
-            case 20 -> {
+            case SLOT_RANKING -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new RankingFrame(services, () -> open(player)).open(player);
             }
-            case 21 -> {
+            case SLOT_LISTA -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new ClanListFrame(services, () -> open(player)).open(player);
             }
-            case 22 -> clanOptional.ifPresent(clan -> {
+            case SLOT_PREFERENCIAS -> clanOptional.ifPresent(clan -> {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new PreferencesFrame(services, clan, services.logger(), () -> open(player)).open(player);
             });
-            case 24 -> clanOptional.ifPresent(clan -> {
+            case SLOT_BAU -> clanOptional.ifPresent(clan -> {
                 Optional<ClanMember> member = services.clanManager().getMember(player.getUniqueId());
                 boolean canAccess = member.isPresent()
                         && hasPermission(clan, member.get(), ClanPermission.ACESSAR_BAU);
@@ -222,7 +251,7 @@ public final class MainMenuFrame extends AbstractFrame {
                 player.playSound(player.getLocation(), Sound.UI_BUTTON_CLICK, 1f, 1f);
                 new ClanChestFrame(services, clan).open(player);
             });
-            case 23 -> {
+            case SLOT_AJUDA -> {
                 player.closeInventory();
                 boolean hasClan = clanOptional.isPresent();
                 services.languageManager().getList(hasClan ? "ajuda-com-clan" : "ajuda-sem-clan")
