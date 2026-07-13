@@ -62,8 +62,12 @@ public final class ScoreboardManager {
         if (!configManager.nametagEnabled()) {
             return;
         }
+        // Nao exige posse exclusiva do Scoreboard: se outro plugin ja deu um Scoreboard proprio pro
+        // jogador (ex: sidebar de anuncio do yEssentials), os times de cor entram nesse mesmo objeto
+        // em vez de desistir. So cria um novo se o jogador estiver mesmo sem nenhum (board == null,
+        // Bukkit sempre garante pelo menos o principal, entao isso e so seguranca defensiva).
         Scoreboard board = viewer.getScoreboard();
-        if (board == null || board == Bukkit.getScoreboardManager().getMainScoreboard()) {
+        if (board == null) {
             board = Bukkit.getScoreboardManager().getNewScoreboard();
             viewer.setScoreboard(board);
         }
