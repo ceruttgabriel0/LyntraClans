@@ -25,7 +25,9 @@ kills:
   weight-rival: 3.0
   weight-aliado: 0.0
   weight-neutro: 1.0
-  weight-civil: 1.0
+  # Zerado de proposito (mesma filosofia do SimpleClans): matar civil (jogador sem cla)
+  # nao deve dar KDR nenhum, senao vira incentivo pra griefar quem nao tem cla nenhuma culpa.
+  weight-civil: 0.0
   # Multiplicador extra aplicado ao peso do kill quando os dois clas estao em guerra ativa
   # (/clan guerra iniciar). Ex: kill de rival em guerra vale weight-rival * war-weight-multiplier.
   war-weight-multiplier: 1.5
