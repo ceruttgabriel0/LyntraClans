@@ -1,4 +1,4 @@
-prefix: '<gray>[<gold>Clã</gold>]</gray> '
+prefix: '<gray>[<gold>SagardClans</gold>]</gray> '
 
 somente-jogador: '{prefix}<red>Somente jogadores podem usar este comando.'
 sem-permissao: '{prefix}<red>Você não tem permissão para fazer isso.'
